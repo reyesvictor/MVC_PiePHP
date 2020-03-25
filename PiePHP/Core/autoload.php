@@ -4,8 +4,7 @@
 //Donc pour accéder à Core il faut
 // ../../../../Core/core.php
 
-// var_dump($_SERVER);
-$path = $_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL'] . 'Core/';
+// $path = $_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL'] . 'Core/';
 // echo $path . PHP_EOL;
 
 // if ( file_exists('C:/xampp/htdocs//MVC_PiePHP/Core/Core.php') ) {
@@ -14,16 +13,16 @@ $path = $_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL'] . 'Core/';
 
 spl_autoload_register('autoLoad');
 
+// echo __DIR__ . PHP_EOL;
+// echo PATH_ORIGIN . PHP_EOL;
+
 function autoLoad($class)
 {
   $array = [
-    url($_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL']),
-    // url('../../../../../Core/'),
-    // url('../../../../Core/'),
-    // url('../../../Core/'),
-    // url('../../Core/'),
-    // url('../Core/'),
-    // url('./Core/'),
+    // url($_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL']),
+    PATH_ORIGIN,
+    './src/',
+    './src/Database/', 
   ];
 
   for ($i = 0; $i < count($array); $i++) {
