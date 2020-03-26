@@ -22,7 +22,8 @@ function autoLoad($class)
     // url($_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL']),
     PATH_ORIGIN,
     './src/',
-    './src/Database/', 
+    './src/Database/',
+    '../src/',
   ];
 
   for ($i = 0; $i < count($array); $i++) {
@@ -33,4 +34,4 @@ function autoLoad($class)
       include $classPath;
     }
   }
-}
+} 

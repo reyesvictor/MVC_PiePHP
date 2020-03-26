@@ -6,6 +6,10 @@ class UserController
 {
   public function addAction()
   {
-    echo 'addAction Launched SIster' . PHP_EOL;
+    echo 'UserController + addAction' . PHP_EOL;
+  }
+  
+  public function indexAction() {
+    echo 'UserController + indexAction' . PHP_EOL;
   }
 }

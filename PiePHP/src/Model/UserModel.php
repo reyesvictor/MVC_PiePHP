@@ -6,6 +6,6 @@ class UserModel
 {
   public function run()
   {
-    echo __CLASS__ . " [ OK MODEL ]" . PHP_EOL;
+    echo __CLASS__ . ".php [ OK ]" . PHP_EOL;
   }
 }

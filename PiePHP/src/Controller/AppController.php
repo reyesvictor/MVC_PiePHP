@@ -4,7 +4,7 @@ namespace Controller;
 
 class AppController
 {
-  public function addAction() {
-    echo 'addAction Launched SIster' . PHP_EOL;
+  public function indexAction() {
+    echo 'AppController + indexAction ' . PHP_EOL;
   }
 }

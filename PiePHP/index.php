@@ -43,12 +43,12 @@ $app->run();
 // $app -> run () ;
 
 
-echo "\n\n\n\n\n\n\n\n";
-echo '============POST===============' . PHP_EOL;
-var_dump($_POST);
-echo '=============GET===============' . PHP_EOL;
-var_dump($_GET);
-echo '============SERVER===============' . PHP_EOL;
-var_dump($_SERVER);
-echo '============END===============' . PHP_EOL;
-echo "\n\n\n\n\n\n\n\n";
+// echo "\n\n\n\n\n\n\n\n";
+// echo '============POST===============' . PHP_EOL;
+// var_dump($_POST);
+// echo '=============GET===============' . PHP_EOL;
+// var_dump($_GET);
+// echo '============SERVER===============' . PHP_EOL;
+// var_dump($_SERVER);
+// echo '============END===============' . PHP_EOL;
+// echo "\n\n\n\n\n\n\n\n";
