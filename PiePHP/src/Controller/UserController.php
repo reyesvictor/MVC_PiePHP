@@ -16,7 +16,8 @@ class UserController extends \Core\Controller
 
   public function addAction()
   {
-    echo 'UserController + addAction' . PHP_EOL;
+    // $this->file = 'index';
+    echo 'UserController + addAction [ ROUTER STATIC ] </br>' . PHP_EOL;
   }
 
   public function indexAction()
@@ -51,7 +52,7 @@ class UserController extends \Core\Controller
     if ( $this->file ) {
       $this->render($this->file);
     } else {
-      echo 'File hasnt been declared in UserController';
+      echo 'File hasnt been declared in UserController </br>' . PHP_EOL;
     }
     // echo '__destruct [ OK ]' . PHP_EOL;
     // echo PHP_EOL;
