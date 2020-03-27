@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class Router extends Controller
+class Router
 {
   private static $routes;
   public static function connect($url, $route)

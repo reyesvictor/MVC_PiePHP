@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class Core extends Controller
+class Core
 {
   public $url;
   public $array;
@@ -15,10 +15,10 @@ class Core extends Controller
 
     // echo 'PATH TO SEARCH: ' . substr($_SERVER['REQUEST_URI'], $nbr) . PHP_EOL;
     if ($this->array = Router::get($this->url())) {
-      echo 'STATIC [ OK ]' . PHP_EOL;
+      // echo 'STATIC [ OK ]' . PHP_EOL;
       $this->static();
     } else {
-      echo 'DYNAMIC [ OK ]' . PHP_EOL;
+      // echo 'DYNAMIC [ OK ]' . PHP_EOL;
       $this->dynamic();
     }
   }
@@ -34,22 +34,23 @@ class Core extends Controller
     $this->url = array_values(array_filter((explode('/', $_SERVER['REQUEST_URI'])), function ($v) {
       return $v !== 'PiePHP' && $v !== '';
     }, ARRAY_FILTER_USE_BOTH));
-    
+
     // echo 'PATH TO SEARCH DYN : ' ;
     // var_dump($this->url);
     // echo PHP_EOL;
-    
+
     //Lorsque le controller ou l’action n’est pas présent, il faudra les remplacer par « app » et « index » respectivement.
     if ($this->verifyEmptyInput()) {
-      echo 'INPUT MISSING , Calling App and indexAction || ' . count($_GET) . ' || ' . count($this->url) .  PHP_EOL;
+      echo 'INPUT MISSING , Calling App and indexAction || ' . count($_GET) . ' || ' . count($this->url) . PHP_EOL;
     }
 
     $this->getClass();
-    echo 'Class verification: ' . $this->class . PHP_EOL;
 
     //Si le controller ou l’action fournie n’existe pas, il faut afficher le message : « 404 »
+    // echo url(PATH_ORIGIN) . 'src/' . url($this->class) . ' <=====' .  PHP_EOL;
+    // echo 'Class verification: ' . $this->class . PHP_EOL; //IMPORTANT
     if (
-      !file_exists('.\src\\' .  $this->class . '.php')
+      !file_exists( PATH_ORIGIN . '/src/' .  url($this->class) . '.php')
       || !method_exists($this->class, $this->array['action'] . 'Action')
     ) {
       echo "404 : File doesn't exist || " .  $this->class . '.php' . PHP_EOL;
@@ -58,11 +59,12 @@ class Core extends Controller
 
     $this->redirect();
 
-    $md = new \Model\UserModel();
-    $md->run();
+    // $md = new \Model\UserModel();
+    // $md->run();
   }
 
-  protected function url() {
+  protected function url()
+  {
     // $arr = explode('/', $_SERVER['REQUEST_URI']);
     // unset($arr[1]);
     // $arr = implode('/', $arr);
@@ -103,7 +105,7 @@ class Core extends Controller
 
   protected function redirect()
   {
-    $cl = new $this->class();
+    $cl = new $this->class ();
     $cl->{$this->array['action'] . 'Action'}();
   }
 }

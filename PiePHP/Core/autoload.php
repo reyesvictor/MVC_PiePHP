@@ -24,6 +24,11 @@ function autoLoad($class)
     './src/',
     './src/Database/',
     '../src/',
+    // '../../',
+    // '../../',
+    // '../',
+    // './',
+    // '../../../'
   ];
 
   for ($i = 0; $i < count($array); $i++) {
