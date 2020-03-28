@@ -7,9 +7,11 @@ namespace Controller;
 class AppController extends \Core\Controller
 {
   protected $file;
+  protected $rq;
 
   public function indexAction()
   {
+    $this->rq = new \Core\Request();
     $this->file = 'index';
     // echo 'AppController + indexAction ' . PHP_EOL;
   }

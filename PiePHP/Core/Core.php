@@ -48,7 +48,7 @@ class Core
 
     //Si le controller ou l’action fournie n’existe pas, il faut afficher le message : « 404 »
     // echo url(PATH_ORIGIN) . 'src/' . url($this->class) . ' <=====' .  PHP_EOL;
-    // echo 'Class verification: ' . $this->class . PHP_EOL; //IMPORTANT
+    echo 'Class verification: ' . $this->class . PHP_EOL;
     if (
       !file_exists( PATH_ORIGIN . '/src/' .  url($this->class) . '.php')
       || !method_exists($this->class, $this->array['action'] . 'Action')

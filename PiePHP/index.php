@@ -28,6 +28,7 @@ define('PATH_ORIGIN', url(__DIR__ . DIRECTORY_SEPARATOR));
 // echo 'path:  ' . PATH_ORIGIN . PHP_EOL;
 // echo 'auto:  ' . AUTOLOADER_URI . PHP_EOL;
 
+
 require_once AUTOLOADER_URI;
 
 //CLASS DECLARE
