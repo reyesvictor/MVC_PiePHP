@@ -4,71 +4,57 @@ namespace Core;
 
 class ORM extends Database
 {
-  private $db;
 
-  public function __construct() {
-    $this->db = $this->connect();
-  } 
+  private $t;
+  private $v;
+  private $u;
+  private $arr;
+  private $fields;
 
-  public function create ($table, $fields) {
+  protected function create($table, $fields) //return last id
+  {
+    $this->fields = $fields;
+    self::fieldMaker();
+    $sql = "INSERT INTO {$table} ( $this->t ) VALUES ( $this->v ) ;";
+    Database::executeThis($sql, $this->arr);
+    return $this->id = $this->db->lastInsertId();
+  }
+  
+  protected function read($table, $id) // retourne un tableau associatif de l' enregistrement
+  {
+    $sql = "SELECT * FROM $table WHERE id = ? ;";
+    return Database::executeThis($sql, $id);
+  }
+  
+  protected function update($table, $id, $fields) // retourne un booleen
+  {
+    $this->fields = $fields;
+    self::fieldMaker();
+    $sql = "UPDATE $table SET $this->u WHERE id = $id ;";
+    echo '<pre>';
+    echo $sql;
+    echo '</pre>';
+    Database::executeThis($sql, $this->arr);
+    return $this->stmt->rowCount();
+  }
 
-    $orm = new ORM () ;
-$orm -> create ('articles', array (
-'titre ' => "un super titre" ,
-'content ' => 'et voici une super article de blog',
-'author ' => 'Rodrigue'
-) ) ;
-
-//-------------------------------------
-
-$column = '';
-$values = '';
-$inValues = '';
-foreach($fields as $key => $value)
-{
-    $column .= "$key";
-    $values .= "$value";  
-    $inValues .= "?"; 
-    if (array_key_last($fields) !== $key)
-        $column .= ', ';
-    if (end($fields) !== $value)
-    {
-        $values .= ', ';
-        $inValues .= ", ";
+  private function fieldMaker()
+  {
+    $this->arr = [];
+    $this->f = '';
+    $this->v = '';
+    $this->u = '';
+    foreach ($this->fields as $table => $value) {
+      if (array_key_last($this->fields) == $table) {
+        $this->t .=  "`" . $table . "`";
+        $this->v .= "?";
+        $this->u .= " $table = ? ";
+      } else {
+        $this->t .=  "`" . $table . "`, ";
+        $this->v .= "? , ";
+        $this->u .= " $table = ? , ";
+      }
+      array_push($this->arr, $value);
     }
-        
-        
-}
-$values = explode(',', $values);
-
-$sql = "INSERT INTO $table ($column) VALUES ($inValues)";
-$stmt = $this->connect()->prepare($sql);
-$stmt->execute($values);
-
-//----------------------------------------
-$executeArray = [];
-$query = "INSERT INTO $table (";
-
-foreach ($fields as $key => $value) {
-    $query .= "$key ,";
-}
-
-$query = substr($query, 0, -2);
-$query .= ") VALUES (";
-
-foreach ($fields as $key => $value) {
-    $query .= "?, ";
-    array_push($executeArray, $value);
-}
-
-$query = substr($query, 0, -2);
-$query .= ")";
-
-$req = $this->conn->prepare($query);
-$req->execute($executeArray);
-return $this->conn->lastInsertId();
-
-    // return id;
-  } // retourne un id
-
+  }
 }

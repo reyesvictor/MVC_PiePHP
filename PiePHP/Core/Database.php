@@ -8,14 +8,14 @@ class Database
     private $user = "root";
     private $pwd = "";
     private $dbName = "piephp";
-    private $stmt;
+    protected $stmt;
     // private $host = "remotemysql.com";
     // private $user = "lTsiPIi4Qh";
     // private $pwd = "nUKWNJXLKN";
     // private $dbName = "lTsiPIi4Qh";
 
     //CONNEXION TO THE DATABASE
-    protected function connect() 
+    protected function connect()
     {
         $dsn = 'mysql:host=' . $this->host . ';port=3306;dbname=' . $this->dbName;
         $pdo = new \PDO($dsn,  $this->user,  $this->pwd);
@@ -24,20 +24,35 @@ class Database
         return $pdo;
     }
 
-    protected function executeThis($sql, $array_values=null) {
-      $this->stmt = $this->db->prepare($sql);
-      if ( !$array_values ) {
-          $this->stmt->execute();
-      } else if ( is_string($array_values) || is_int($array_values) ) {
-          $this->stmt->execute([$array_values]);
-      } else {
-          $this->stmt->execute($array_values);
-      }
-      try {
-          $results = $this->stmt->fetchAll();
-          return $results;
-      } catch (\Throwable $th) {
-          return $th;
-      }
-  }
+    protected function executeThis($sql, $array_values = null)
+    {
+        $this->stmt = $this->db->prepare($sql);
+        if (!$array_values) {
+            $this->stmt->execute();
+        } else if (is_string($array_values) || is_int($array_values)) {
+            $this->stmt->execute([$array_values]);
+            return $this->tryFetch();
+        } else {
+            $this->stmt->execute($array_values);
+            return $this->tryFetchAll();
+        }
+    }
+
+    protected function tryFetch() {
+        try {
+            $results = $this->stmt->fetchAll();
+            return $results;
+        } catch (\Throwable $th) {
+            return $th;
+        }
+    }
+
+    protected function tryFetchAll() {
+        try {
+            $results = $this->stmt->fetchAll();
+            return $results;
+        } catch (\Throwable $th) {
+            return $th;
+        }
+    }
 }
