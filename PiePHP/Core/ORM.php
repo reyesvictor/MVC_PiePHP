@@ -19,13 +19,13 @@ class ORM extends Database
     Database::executeThis($sql, $this->arr);
     return $this->id = $this->db->lastInsertId();
   }
-  
+
   protected function read($table, $id) // retourne un tableau associatif de l' enregistrement
   {
     $sql = "SELECT * FROM $table WHERE id = ? ;";
     return Database::executeThis($sql, $id);
   }
-  
+
   protected function update($table, $id, $fields) // retourne un booleen
   {
     $this->fields = $fields;
@@ -35,6 +35,16 @@ class ORM extends Database
     echo $sql;
     echo '</pre>';
     Database::executeThis($sql, $this->arr);
+    return $this->stmt->rowCount();
+  }
+  
+  public function delete($table, $id) //retourne un booleen
+  {
+    $sql = "DELETE FROM $table WHERE id = ? ;";
+    echo '<pre></br>';
+    echo $sql;
+    echo '</br></pre>';
+    Database::executeThis($sql, $id);
     return $this->stmt->rowCount();
   }
 

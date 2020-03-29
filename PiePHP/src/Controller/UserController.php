@@ -32,7 +32,7 @@ class UserController extends \Core\Controller
   public function registerAction()
   {
     $this->add = new \Model\UserModel($this->rq->post['email'], $this->rq->post['password']);
-    //CREATE
+    //CREATE user
     echo '<pre>';
     echo $this->add->modelCreate() . ' <=== Modelcreate\Create : last id </br>' . PHP_EOL;
     echo '</br>';
@@ -44,6 +44,9 @@ class UserController extends \Core\Controller
     echo ' <==== 1 = Update OK, 0 = Update WRONG </br>';
     //READ, doit aller dans showAction en bas
     print_r($this->add->modelRead());
+    //DELETE user
+    print_r($this->add->modelDelete());
+    echo ' <==== 1 = Delete OK, 0 = Delete WRONG </br>';
     echo '</br>';
     echo '</pre>';
   }
@@ -59,7 +62,7 @@ class UserController extends \Core\Controller
     $this->file = 'index';
     // echo 'UserController + indexAction' . PHP_EOL;
   }
-  
+
   public function loginAction()
   {
     if (isset($this->rq->post['email']) && isset($this->rq->post['password'])) {

@@ -53,4 +53,9 @@ class UserModel extends \Core\ORM
       'password' => 'wesh',
     ]);
   }
+
+  public function modelDelete()
+  {
+    return \Core\ORM::delete('users', $this->id);
+  }
 }
