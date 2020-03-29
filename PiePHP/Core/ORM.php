@@ -31,38 +31,53 @@ class ORM extends Database
     $this->fields = $fields;
     self::fieldMaker();
     $sql = "UPDATE $table SET $this->u WHERE id = $id ;";
-    echo '<pre>';
-    echo $sql;
-    echo '</pre>';
     Database::executeThis($sql, $this->arr);
     return $this->stmt->rowCount();
   }
-  
-  public function delete($table, $id) //retourne un booleen
+
+  protected function delete($table, $id) //retourne un booleen
   {
     $sql = "DELETE FROM $table WHERE id = ? ;";
+    Database::executeThis($sql, $id);
+    return $this->stmt->rowCount();
+  }
+  
+  public function find($table, $params) { // retourne un tableau d'enregistrements
+    $this->fields = $params['WHERE'];
+    self::fieldMaker();
+    $ord = '';
+    $lim = '';
+    if (isset($params['ORDER BY'])) {
+      $ord = "ORDER BY {$params['ORDER BY']} ";
+    }
+    if (isset($params['LIMIT'])) {
+      $lim = "LIMIT {$params['LIMIT']} ";
+    }
+    $sql = "SELECT * FROM $table WHERE $this->where $ord $lim ;";
     echo '<pre></br>';
     echo $sql;
     echo '</br></pre>';
-    Database::executeThis($sql, $id);
-    return $this->stmt->rowCount();
+    return Database::executeThis($sql, $this->arr);
   }
 
   private function fieldMaker()
   {
     $this->arr = [];
-    $this->f = '';
+    $this->t = '';
     $this->v = '';
     $this->u = '';
+    $this->where = '';
     foreach ($this->fields as $table => $value) {
       if (array_key_last($this->fields) == $table) {
         $this->t .=  "`" . $table . "`";
         $this->v .= "?";
         $this->u .= " $table = ? ";
+        $this->where .= " $table = ? ";
       } else {
         $this->t .=  "`" . $table . "`, ";
         $this->v .= "? , ";
         $this->u .= " $table = ? , ";
+        $this->where .= " $table = ? AND ";
       }
       array_push($this->arr, $value);
     }

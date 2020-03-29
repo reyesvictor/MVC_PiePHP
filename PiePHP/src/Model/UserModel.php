@@ -58,4 +58,16 @@ class UserModel extends \Core\ORM
   {
     return \Core\ORM::delete('users', $this->id);
   }
+
+  public function modelFind()
+  {
+    return \Core\ORM::find('users', [
+      'WHERE' => [
+        'email' => 'newemail@test',
+        'password' => 'wesh'
+      ],
+      'ORDER BY' => 'id DESC',
+      'LIMIT' => '10',
+    ]);
+  }
 }

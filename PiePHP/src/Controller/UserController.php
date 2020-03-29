@@ -24,6 +24,12 @@ class UserController extends \Core\Controller
       echo $this->registerAction();
     } else {
       $this->file = 'register';
+      //EN DESSOUS POUR LES TESTS, A ENLEVER----
+      $this->add = new \Model\UserModel('test', 'ok');
+      echo '<pre></br>';
+      print_r($this->add->modelFind());
+      echo '</br></pre>';
+      //JUSQUICI--------------------------------
     }
     //true
     echo 'UserController + addAction [ ROUTER STATIC ] </br>' . PHP_EOL;
@@ -43,10 +49,12 @@ class UserController extends \Core\Controller
     print_r($this->add->modelUpdate());
     echo ' <==== 1 = Update OK, 0 = Update WRONG </br>';
     //READ, doit aller dans showAction en bas
-    print_r($this->add->modelRead());
+    // print_r($this->add->modelRead());
     //DELETE user
     print_r($this->add->modelDelete());
     echo ' <==== 1 = Delete OK, 0 = Delete WRONG </br>';
+    echo '</br>';
+    print_r($this->add->modelFind());
     echo '</br>';
     echo '</pre>';
   }

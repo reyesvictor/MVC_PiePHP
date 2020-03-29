@@ -32,7 +32,21 @@ class Database
     } else if (is_string($array_values) || is_int($array_values)) {
       $this->stmt->execute([$array_values]);
     } else {
+      //TEST-------------------------------------------
+      // for ($i = 1; $i <= count($array_values); $i++) {
+      //   $this->stmt->bindParam($i, $array_values[$i - 1]);
+      // }
+      // $this->stmt->execute();
+      // echo '<pre></br>';
+      // var_dump($this->stmt->debugDumpParams());
+      // echo '</br></pre>';
+      //------------------------------------------------
       $this->stmt->execute($array_values);
+      // NE PAS EFFACER CEST COOL POUR VOIR LES REQUETES SQL----------------------
+      // echo '<pre></br>';
+      // var_dump($this->stmt->debugDumpParams());
+      // echo '</br></pre>';
+      //--------------------------------------------------------------------------
     }
     return $this->tryFetch();
   }
@@ -40,7 +54,7 @@ class Database
   protected function tryFetch()
   {
     try {
-      if (count($results = $this->stmt->fetchAll()) < 2) {
+      if (count($results = $this->stmt->fetchAll()) == 1) {
         return $results[0];
       } else {
         return $results;
