@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class UserModel extends \Core\Database
+class UserModel extends \Core\ORM
 {
   private $mel;
   private $pwd;
@@ -30,7 +30,7 @@ class UserModel extends \Core\Database
   }
   
   
-  public function  create() {
+  public function modelRegister() {
     $sql = 'INSERT INTO users (`email`, `password`) VALUES ( ? ,  ? ); ';
     $this->executeThis($sql, [$this->mel, $this->pwd]);
     return $this->db->lastInsertId();

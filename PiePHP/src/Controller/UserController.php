@@ -33,7 +33,7 @@ class UserController extends \Core\Controller
   public function registerAction()
   {
       $this->add = new \Model\UserModel ($this->rq->post['email'], $this->rq->post['password']);
-      echo $this->add->create() . ' <===LAST ID ENTERED </br>' . PHP_EOL;
+      echo $this->add->modelRegister() . ' <===LAST ID ENTERED </br>' . PHP_EOL;
       // echo $this->add->save();
       // $this->file = 'index'; //ne pas supprimer
   }
