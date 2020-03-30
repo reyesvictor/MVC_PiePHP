@@ -58,7 +58,7 @@ class UserController extends \Core\Controller
     echo '</br>';
     echo '</pre>';
   }
-  
+
   //CONNECTER A USER -------------------------------
   public function indexAction()
   {
@@ -85,8 +85,8 @@ class UserController extends \Core\Controller
     }
     // echo 'UserController + registerAction' . PHP_EOL;
   }
-  
-  
+
+
   // SHOW LIST OF USERS ----------------------------
   public function showAction()
   {

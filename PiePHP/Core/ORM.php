@@ -2,48 +2,57 @@
 
 namespace Core;
 
-class ORM extends Database
+class ORM //extends Database
 {
 
-  private $t;
-  private $v;
-  private $u;
-  private $arr;
-  private $fields;
+  static $t;
+  static $v;
+  static $u;
+  static $arr;
+  static $where;
+  static $fields;
+  // private $getdb;
+  static $db;
 
-  protected function create($table, $fields) //return last id
+  public function __construct()
   {
-    $this->fields = $fields;
-    self::fieldMaker();
-    $sql = "INSERT INTO {$table} ( $this->t ) VALUES ( $this->v ) ;";
-    Database::executeThis($sql, $this->arr);
-    return $this->id = $this->db->lastInsertId();
+    self::$db = Database::connect();
   }
 
-  protected function read($table, $id) // retourne un tableau associatif de l' enregistrement
+  public static function create($table, $fields) //return last id
+  {
+    self::$fields = $fields;
+    self::fieldMaker();
+    $sql = "INSERT INTO {$table} ( " . self::$t . " ) VALUES ( " . self::$v . " ) ;";
+    Database::executeThis($sql, self::$arr, self::$db);
+    return self::$db->lastInsertId();
+  }
+
+  public static function read($table, $id) // retourne un tableau associatif de l' enregistrement
   {
     $sql = "SELECT * FROM $table WHERE id = ? ;";
-    return Database::executeThis($sql, $id);
+    return Database::executeThis($sql, $id, self::$db);
   }
 
-  protected function update($table, $id, $fields) // retourne un booleen
+  public static function update($table, $id, $fields) // retourne un booleen
   {
-    $this->fields = $fields;
+    self::$fields = $fields;
     self::fieldMaker();
-    $sql = "UPDATE $table SET $this->u WHERE id = $id ;";
-    Database::executeThis($sql, $this->arr);
-    return $this->stmt->rowCount();
+    $sql = "UPDATE $table SET " . self::$u . " WHERE id = $id ;";
+    Database::executeThis($sql, self::$arr, self::$db);
+    return Database::$stmt->rowCount();
   }
 
-  protected function delete($table, $id) //retourne un booleen
+  public static function delete($table, $id) //retourne un booleen
   {
     $sql = "DELETE FROM $table WHERE id = ? ;";
-    Database::executeThis($sql, $id);
-    return $this->stmt->rowCount();
+    Database::executeThis($sql, $id, self::$db);
+    return Database::$stmt->rowCount();
   }
-  
-  public function find($table, $params) { // retourne un tableau d'enregistrements
-    $this->fields = $params['WHERE'];
+
+  public static function find($table, $params)
+  { // retourne un tableau d'enregistrements
+    self::$fields = $params['WHERE'];
     self::fieldMaker();
     $ord = '';
     $lim = '';
@@ -53,33 +62,33 @@ class ORM extends Database
     if (isset($params['LIMIT'])) {
       $lim = "LIMIT {$params['LIMIT']} ";
     }
-    $sql = "SELECT * FROM $table WHERE $this->where $ord $lim ;";
+    $sql = "SELECT * FROM $table WHERE " . self::$where . $ord .  $lim . " ;";
     echo '<pre></br>';
     echo $sql;
     echo '</br></pre>';
-    return Database::executeThis($sql, $this->arr);
+    return Database::executeThis($sql, self::$arr, self::$db);
   }
 
-  private function fieldMaker()
+  public static function fieldMaker()
   {
-    $this->arr = [];
-    $this->t = '';
-    $this->v = '';
-    $this->u = '';
-    $this->where = '';
-    foreach ($this->fields as $table => $value) {
-      if (array_key_last($this->fields) == $table) {
-        $this->t .=  "`" . $table . "`";
-        $this->v .= "?";
-        $this->u .= " $table = ? ";
-        $this->where .= " $table = ? ";
+    self::$arr = [];
+    self::$t = '';
+    self::$v = '';
+    self::$u = '';
+    self::$where = '';
+    foreach (self::$fields as $table => $value) {
+      if (array_key_last(self::$fields) == $table) {
+        self::$t .=  "`" . $table . "`";
+        self::$v .= "?";
+        self::$u .= " $table = ? ";
+        self::$where .= " $table = ? ";
       } else {
-        $this->t .=  "`" . $table . "`, ";
-        $this->v .= "? , ";
-        $this->u .= " $table = ? , ";
-        $this->where .= " $table = ? AND ";
+        self::$t .=  "`" . $table . "`, ";
+        self::$v .= "? , ";
+        self::$u .= " $table = ? , ";
+        self::$where .= " $table = ? AND ";
       }
-      array_push($this->arr, $value);
+      array_push(self::$arr, $value);
     }
   }
 }

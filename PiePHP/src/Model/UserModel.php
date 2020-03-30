@@ -2,18 +2,22 @@
 
 namespace Model;
 
-class UserModel extends \Core\ORM
+class UserModel extends \Core\Entity //extends \Core\ORM
 {
   private $mel;
   private $pwd;
-  protected $db;
-  protected $id;
+  private $id;
+  private $orm;
+  private $getdb;
+  public static $db;
 
   public function __construct($mel, $pwd)
   {
     $this->mel = $mel;
     $this->pwd = $pwd;
-    $this->db = $this->connect();
+    // $this->db = new \Core\Database ();
+    self::$db = \Core\Database::connect();
+    $this->orm =  new \Core\ORM();
   }
 
   public function run()
@@ -24,18 +28,18 @@ class UserModel extends \Core\ORM
   public function save()
   {
     $sql = 'INSERT INTO users (`email`, `password`) VALUES ( ? ,  ? ); ';
-    $this->executeThis($sql, [$this->mel, $this->pwd]);
+    \Core\Database::executeThis($sql, [$this->mel, $this->pwd], self::$db);
   }
 
   public function login()
   {
     $sql = 'SELECT * from USERS WHERE email = ? AND `password` = ? ; ';
-    return $this->executeThis($sql, [$this->mel, $this->pwd]);
+    return \Core\Database::executeThis($sql, [$this->mel, $this->pwd], self::$db);
   }
 
   public function modelCreate()
   {
-    return \Core\ORM::create('users', [
+    return $this->id = \Core\ORM::create('users', [
       'email' => $this->mel,
       'password' => $this->pwd,
     ]);
