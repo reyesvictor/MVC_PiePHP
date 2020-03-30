@@ -4,7 +4,6 @@ namespace Model;
 
 class UserModel extends \Core\Entity //extends \Core\ORM
 {
-
   protected $id;
   protected $orm;
   protected $getdb;

@@ -12,8 +12,6 @@ class Core
   {
     // echo __CLASS__ . " [ OK ]" . PHP_EOL;
     require_once './src/routes.php';
-
-    // echo 'PATH TO SEARCH: ' . substr($_SERVER['REQUEST_URI'], $nbr) . PHP_EOL;
     if ($this->array = Router::get($this->url())) {
       // echo 'STATIC [ OK ]' . PHP_EOL;
       $this->static();
@@ -21,7 +19,7 @@ class Core
       // echo 'DYNAMIC [ OK ]' . PHP_EOL;
       $this->dynamic();
     }
-  }
+  } 
 
   protected function static()
   {
@@ -34,10 +32,6 @@ class Core
     $this->url = array_values(array_filter((explode('/', $_SERVER['REQUEST_URI'])), function ($v) {
       return $v !== 'PiePHP' && $v !== '';
     }, ARRAY_FILTER_USE_BOTH));
-
-    // echo 'PATH TO SEARCH DYN : ' ;
-    // var_dump($this->url);
-    // echo PHP_EOL;
 
     //Lorsque le controller ou l’action n’est pas présent, il faudra les remplacer par « app » et « index » respectivement.
     if ($this->verifyEmptyInput()) {
@@ -58,16 +52,10 @@ class Core
     }
 
     $this->redirect();
-
-    // $md = new \Model\UserModel();
-    // $md->run();
   }
 
   protected function url()
   {
-    // $arr = explode('/', $_SERVER['REQUEST_URI']);
-    // unset($arr[1]);
-    // $arr = implode('/', $arr);
     $nbr = strlen(array_reverse(array_filter(explode('/', PATH_ORIGIN)), '')[0]) + 1;
     return substr($_SERVER['REQUEST_URI'], $nbr);
   }
