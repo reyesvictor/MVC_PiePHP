@@ -4,21 +4,20 @@ namespace Model;
 
 class UserModel extends \Core\Entity //extends \Core\ORM
 {
-  private $mel;
-  private $pwd;
-  private $id;
-  private $orm;
-  private $getdb;
-  public static $db;
 
-  public function __construct($mel, $pwd)
-  {
-    $this->mel = $mel;
-    $this->pwd = $pwd;
-    // $this->db = new \Core\Database ();
-    self::$db = \Core\Database::connect();
-    $this->orm =  new \Core\ORM();
-  }
+  protected $id;
+  protected $orm;
+  protected $getdb;
+  // public static $db;
+
+  // public function __construct($mel, $pwd)
+  // {
+  //   $this->mel = $mel;
+  //   $this->pwd = $pwd;
+  //   // $this->db = new \Core\Database ();
+  //   self::$db = \Core\Database::connect();
+  //   $this->orm =  new \Core\ORM();
+  // }
 
   public function run()
   {
@@ -28,20 +27,20 @@ class UserModel extends \Core\Entity //extends \Core\ORM
   public function save()
   {
     $sql = 'INSERT INTO users (`email`, `password`) VALUES ( ? ,  ? ); ';
-    \Core\Database::executeThis($sql, [$this->mel, $this->pwd], self::$db);
+    \Core\Database::executeThis($sql, [$this->email, $this->password]);
   }
 
   public function login()
   {
     $sql = 'SELECT * from USERS WHERE email = ? AND `password` = ? ; ';
-    return \Core\Database::executeThis($sql, [$this->mel, $this->pwd], self::$db);
+    return \Core\Database::executeThis($sql, [$this->email, $this->password]);
   }
 
   public function modelCreate()
   {
     return $this->id = \Core\ORM::create('users', [
-      'email' => $this->mel,
-      'password' => $this->pwd,
+      'email' => $this->email,
+      'password' => $this->password,
     ]);
   }
 
@@ -71,7 +70,7 @@ class UserModel extends \Core\Entity //extends \Core\ORM
         'password' => 'wesh'
       ],
       'ORDER BY' => 'id DESC',
-      'LIMIT' => '10',
+      'LIMIT' => '3',
     ]);
   }
 }

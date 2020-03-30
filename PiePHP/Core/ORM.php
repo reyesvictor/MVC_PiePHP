@@ -11,27 +11,25 @@ class ORM //extends Database
   static $arr;
   static $where;
   static $fields;
-  // private $getdb;
-  static $db;
 
-  public function __construct()
-  {
-    self::$db = Database::connect();
-  }
+  // public function __construct()
+  // {
+  //   Entity::$db = Database::connect();
+  // }
 
   public static function create($table, $fields) //return last id
   {
     self::$fields = $fields;
     self::fieldMaker();
     $sql = "INSERT INTO {$table} ( " . self::$t . " ) VALUES ( " . self::$v . " ) ;";
-    Database::executeThis($sql, self::$arr, self::$db);
-    return self::$db->lastInsertId();
+    Database::executeThis($sql, self::$arr);
+    return Entity::$db->lastInsertId();
   }
 
   public static function read($table, $id) // retourne un tableau associatif de l' enregistrement
   {
     $sql = "SELECT * FROM $table WHERE id = ? ;";
-    return Database::executeThis($sql, $id, self::$db);
+    return Database::executeThis($sql, $id);
   }
 
   public static function update($table, $id, $fields) // retourne un booleen
@@ -39,14 +37,14 @@ class ORM //extends Database
     self::$fields = $fields;
     self::fieldMaker();
     $sql = "UPDATE $table SET " . self::$u . " WHERE id = $id ;";
-    Database::executeThis($sql, self::$arr, self::$db);
+    Database::executeThis($sql, self::$arr);
     return Database::$stmt->rowCount();
   }
 
   public static function delete($table, $id) //retourne un booleen
   {
     $sql = "DELETE FROM $table WHERE id = ? ;";
-    Database::executeThis($sql, $id, self::$db);
+    Database::executeThis($sql, $id);
     return Database::$stmt->rowCount();
   }
 
@@ -66,7 +64,7 @@ class ORM //extends Database
     echo '<pre></br>';
     echo $sql;
     echo '</br></pre>';
-    return Database::executeThis($sql, self::$arr, self::$db);
+    return Database::executeThis($sql, self::$arr);
   }
 
   public static function fieldMaker()

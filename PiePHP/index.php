@@ -1,5 +1,4 @@
-<pre>
-<?php
+  <?php
 
 // if (!file_exists($_SERVER['SCRIPT_FILENAME'])) {
 //   header("Location: /PiePHP/");
@@ -43,13 +42,17 @@ $app->run();
 // $app = new Core\Core () ;
 // $app -> run () ;
 
+echo '<pre>';
+echo '<h3>HomePage</h3>';
 
-// echo "\n\n\n\n\n\n\n\n";
-// echo '============POST===============' . PHP_EOL;
-// var_dump($_POST);
+echo "\n\n\n\n\n\n\n\n";
+echo '============POST===============</br>' . PHP_EOL;
+var_dump($_POST);
+echo '</br>'  ;
 // echo '=============GET===============' . PHP_EOL;
 // var_dump($_GET);
 // echo '============SERVER===============' . PHP_EOL;
 // var_dump($_SERVER);
-// echo '============END===============' . PHP_EOL;
-// echo "\n\n\n\n\n\n\n\n";
+echo '============END===============</br>' . PHP_EOL;
+echo "\n\n\n\n\n\n\n\n";
+echo '</pre>';

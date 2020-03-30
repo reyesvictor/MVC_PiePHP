@@ -24,9 +24,9 @@ class Database
     return $pdo;
   }
 
-  public static function executeThis($sql, $array_values = null, $db)
+  public static function executeThis($sql, $array_values = null)
   {
-    self::$stmt = $db->prepare($sql);
+    self::$stmt = Entity::$db->prepare($sql);
     if (!$array_values) {
       self::$stmt->execute();
     } else if (is_string($array_values) || is_int($array_values)) {

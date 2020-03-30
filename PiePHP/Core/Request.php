@@ -4,14 +4,13 @@ namespace Core;
 
 class Request
 {
-
-  public $post;
-  public $get;
+  static $post;
+  static $get;
 
   public function __construct()
   {
-    $this->post = $this->secure($_POST);
-    $this->get = $this->secure($_GET);
+    self::$post = self::secure($_POST);
+    self::$get = self::secure($_GET);
   }
 
   protected function secure($var)

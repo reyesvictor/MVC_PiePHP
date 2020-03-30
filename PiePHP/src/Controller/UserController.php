@@ -20,13 +20,17 @@ class UserController extends \Core\Controller
   //REGISTER A NEW USER -----------------------------
   public function addAction()
   {
-    if (isset($this->rq->post['email']) && isset($this->rq->post['password'])) {
+    if (isset(\Core\Request::$post['email']) && isset(\Core\Request::$post['password'])) {
+      echo '<h3>Registration in process !</h3>';
       echo $this->registerAction();
     } else {
       $this->file = 'register';
       //EN DESSOUS POUR LES TESTS, A ENLEVER----
-      $this->add = new \Model\UserModel('test', 'ok');
+      $params = ['id' => '10'];
+      $this->add = new \Model\UserModel($params);
+      // $this->add = new \Model\UserModel('test', 'ok');
       echo '<pre></br>';
+      echo '<h3>Register here, enter your email and password !</h3>';
       print_r($this->add->modelFind());
       echo '</br></pre>';
       //JUSQUICI--------------------------------
@@ -37,7 +41,7 @@ class UserController extends \Core\Controller
 
   public function registerAction()
   {
-    $this->add = new \Model\UserModel($this->rq->post['email'], $this->rq->post['password']);
+    $this->add = new \Model\UserModel(\Core\Request::$post);
     //CREATE user
     echo '<pre>';
     echo $this->add->modelCreate() . ' <=== Modelcreate\Create : last id </br>' . PHP_EOL;
@@ -62,7 +66,7 @@ class UserController extends \Core\Controller
   //CONNECTER A USER -------------------------------
   public function indexAction()
   {
-    if (isset($this->rq->post['email']) && isset($this->rq->post['password'])) {
+    if (isset(\Core\Request::$post['email']) && isset(\Core\Request::$post['password'])) {
       $this->loginAction();
     } else {
       $this->file = 'register';
@@ -73,14 +77,20 @@ class UserController extends \Core\Controller
 
   public function loginAction()
   {
-    if (isset($this->rq->post['email']) && isset($this->rq->post['password'])) {
-      $this->add = new \Model\UserModel($this->rq->post['email'], $this->rq->post['password']);
-      if ($this->add->login() != null) { //if user exists
-        $this->file = 'show';
+    if (isset(\Core\Request::$post['email']) && isset(\Core\Request::$post['password'])) {
+      $this->add = new \Model\UserModel(\Core\Request::$post);
+      if ($res = $this->add->login() != null) { //if user exists
+        echo '--------<pre></br>';
+        var_dump($res);
+        echo '<h3>Succesfull LOGIN !</h3>';
+        echo '--------</br></pre>';
+        $this->file = '/';
       } else {
+        echo '<h3>Wrong email or password !</h3>';
         $this->file = 'login';
       }
     } else { //if it isnt a connection but entering the page
+      echo '<h3>Please enter your email and password to login  !</h3>';
       $this->file = 'login';
     }
     // echo 'UserController + registerAction' . PHP_EOL;
