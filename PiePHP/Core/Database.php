@@ -1,7 +1,7 @@
 <?php
 
 namespace Core;
-// CONNECT TO THE DATABASE HOST
+
 class Database
 {
   static $host = "localhost";

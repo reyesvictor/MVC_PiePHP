@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 //FUNCTION / \ REPLACER
 function url($value)
@@ -19,7 +20,7 @@ require_once AUTOLOADER_URI;
 $app = new Core\Core();
 $app->run();
 
-echo '<h3>HomePage</h3>';
+// echo '<h3>HomePage</h3>';
 // echo "\n\n\n\n\n\n\n\n";
 // echo '============POST===============</br>' . PHP_EOL;
 // var_dump($_POST);

@@ -1,7 +1,5 @@
 <?php
 
-// require_once AUTOLOADER_URI;
-
 namespace Controller;
 
 class AppController extends \Core\Controller
@@ -13,7 +11,6 @@ class AppController extends \Core\Controller
   {
     $this->rq = new \Core\Request();
     $this->file = 'index';
-    // echo 'AppController + indexAction ' . PHP_EOL;
   }
 
   public function __destruct()

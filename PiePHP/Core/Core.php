@@ -10,7 +10,6 @@ class Core
 
   public function run()
   {
-    // echo __CLASS__ . " [ OK ]" . PHP_EOL;
     require_once './src/routes.php';
     if ($this->array = Router::get($this->url())) {
       // echo 'STATIC [ OK ]' . PHP_EOL;

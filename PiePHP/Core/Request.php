@@ -13,7 +13,7 @@ class Request
     self::$get = self::secure($_GET);
   }
 
-  protected function secure($var)
+  static protected function secure($var)
   {
     if (count($var) > 0) {
       foreach ($var as $key => $value) {

@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class ORM //extends Database
+class ORM
 {
 
   static $t;
@@ -12,11 +12,7 @@ class ORM //extends Database
   static $where;
   static $fields;
 
-  // public function __construct()
-  // {
-  //   Entity::$db = Database::connect();
-  // }
-
+  //Les 5 KAGES
   public static function create($table, $fields) //return last id
   {
     self::$fields = $fields;
@@ -25,45 +21,49 @@ class ORM //extends Database
     Database::executeThis($sql, self::$arr);
     return Entity::$db->lastInsertId();
   }
-
-  public static function read($table, $id) // retourne un tableau associatif de l' enregistrement
-  {
-    $sql = "SELECT * FROM $table WHERE id = ? ;";
-    return Database::executeThis($sql, $id);
-  }
-
-  public static function update($table, $id, $fields) // retourne un booleen
+  
+  public static function read($table, $fields) // retourne un tableau associatif de l' enregistrement
   {
     self::$fields = $fields;
     self::fieldMaker();
-    $sql = "UPDATE $table SET " . self::$u . " WHERE id = $id ;";
+    $sql = "SELECT * FROM $table " . self::$where .";";
+    return Database::executeThis($sql, self::$arr);
+  }
+
+  public static function update($table, $fields) // retourne un booleen, here id should be $_SESSION['id']
+  {
+    self::$fields = $fields;
+    self::fieldMaker();
+    $sql = "UPDATE $table SET " . self::$u . " WHERE id = '{$_SESSION['id']}' ;";
     Database::executeThis($sql, self::$arr);
     return Database::$stmt->rowCount();
   }
 
-  public static function delete($table, $id) //retourne un booleen
+  public static function delete($table, $fields) //retourne un booleen
   {
-    $sql = "DELETE FROM $table WHERE id = ? ;";
-    Database::executeThis($sql, $id);
+    self::$fields = $fields;
+    self::fieldMaker();
+    $sql = "DELETE FROM $table " .  self::$where . " ;";
+    Database::executeThis($sql, self::$arr);
     return Database::$stmt->rowCount();
   }
 
   public static function find($table, $params)
   { // retourne un tableau d'enregistrements
-    self::$fields = $params['WHERE'];
-    self::fieldMaker();
+    $params = self::getSpacesAgain($params);
     $ord = '';
     $lim = '';
+    if (isset($params['WHERE'])) {
+      self::$fields = $params['WHERE'];
+      self::fieldMaker();
+    }
     if (isset($params['ORDER BY'])) {
       $ord = "ORDER BY {$params['ORDER BY']} ";
     }
     if (isset($params['LIMIT'])) {
       $lim = "LIMIT {$params['LIMIT']} ";
     }
-    $sql = "SELECT * FROM $table WHERE " . self::$where . $ord .  $lim . " ;";
-    echo '<pre></br>';
-    echo $sql;
-    echo '</br></pre>';
+    $sql = "SELECT * FROM $table " . self::$where . $ord .  $lim . " ;";
     return Database::executeThis($sql, self::$arr);
   }
 
@@ -73,20 +73,35 @@ class ORM //extends Database
     self::$t = '';
     self::$v = '';
     self::$u = '';
-    self::$where = '';
+    self::$where = 'WHERE ';
     foreach (self::$fields as $table => $value) {
       if (array_key_last(self::$fields) == $table) {
         self::$t .=  "`" . $table . "`";
         self::$v .= "?";
-        self::$u .= " $table = ? ";
+        if ($table != 'id') {
+          self::$u .= " $table = ? ";
+        }
         self::$where .= " $table = ? ";
       } else {
         self::$t .=  "`" . $table . "`, ";
         self::$v .= "? , ";
-        self::$u .= " $table = ? , ";
+        if ($table != 'id') {
+          self::$u .= " $table = ? , ";
+        }
         self::$where .= " $table = ? AND ";
       }
       array_push(self::$arr, $value);
     }
+  }
+
+  public static function getSpacesAgain($arr)
+  {
+    foreach ($arr as $key => $value) {
+      if ( preg_match('/\_/', $key) ) {
+        $arr[preg_replace('/\_/', ' ',  $key)] = $arr[$key];
+        unset($arr[$key]);
+      }
+    }
+    return $arr;
   }
 }

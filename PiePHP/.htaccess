@@ -3,7 +3,8 @@ RewriteEngine On
 RewriteBase /PiePHP/
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
 # RewriteCond %{REQUEST_URI} ^/(webroot/.+)$ [OR]
-RewriteCond %{REQUEST_URI} !^/PiePHP/(webroot/.+|index.php/|robots.txt)$
+RewriteCond %{REQUEST_URI} !^/PiePHP/(webroot/.+|index.php/|robots.txt)$ [OR]
+RewriteCond %{REQUEST_URI} ^/PiePHP/logout/$
 # RewriteCond %{REQUEST_URI} !^/(PiePHP/src/View/User/index.php/)
 RewriteRule ^ /PiePHP/index.php/ [QSA,L]
 

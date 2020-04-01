@@ -20,10 +20,12 @@ function autoLoad($class)
 {
   $array = [
     // url($_SERVER['PATH_TRANSLATED'] . $_SERVER['REDIRECT_URL']),
-    PATH_ORIGIN,
-    './src/',
-    './src/Database/',
-    '../src/',
+    // PATH_ORIGIN,
+    implode(DIRECTORY_SEPARATOR, ['.', '']),
+    implode(DIRECTORY_SEPARATOR, ['.', 'src', '']),
+    implode(DIRECTORY_SEPARATOR, ['..', 'src', '']),
+    // './src/',
+    // '../src/',
     // './',
     // '../',
     // '../../',
