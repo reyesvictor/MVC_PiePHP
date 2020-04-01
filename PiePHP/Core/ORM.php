@@ -21,15 +21,22 @@ class ORM
     Database::executeThis($sql, self::$arr);
     return Entity::$db->lastInsertId();
   }
-  
+
+  //This One Should Have The Possibility to get $relations = [ $articles, $comments  ]; ==> modify the sql request
+  // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
   public static function read($table, $fields) // retourne un tableau associatif de l' enregistrement
   {
     self::$fields = $fields;
     self::fieldMaker();
-    $sql = "SELECT * FROM $table " . self::$where .";";
+    $join = '';
+    if (isset($fields['hasmany'])) {
+      $table = $fields['hasone'];
+      $join = "JOIN {$fields['hasmany']} ";
+    }
+    $sql = "SELECT * FROM $table " . $join . self::$where . ";";
     return Database::executeThis($sql, self::$arr);
   }
-
+ 
   public static function update($table, $fields) // retourne un booleen, here id should be $_SESSION['id']
   {
     self::$fields = $fields;
@@ -48,11 +55,22 @@ class ORM
     return Database::$stmt->rowCount();
   }
 
+  //This One Should Have The Possibility to get $relations = [ $articles, $comments  ]; ==> modify the
+  // INSERT INTO comments (content, id_users) VALUES ( 'This is a comment', 2 );
+  // INSERT INTO comments (content, id_users) VALUES ( 'This is another comment', 2 );
+  // INSERT INTO comments (content, id_users) VALUES ( 'This is a last comment', 2 );
+  // Example get multiple comments from one user 
+  // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
   public static function find($table, $params)
   { // retourne un tableau d'enregistrements
     $params = self::getSpacesAgain($params);
     $ord = '';
     $lim = '';
+    $join = '';
+    if (isset($params['hasmany'])) {
+      $table = $params['hasone'];
+      $join = "JOIN {$params['hasmany']} ";
+    }
     if (isset($params['WHERE'])) {
       self::$fields = $params['WHERE'];
       self::fieldMaker();
@@ -63,7 +81,7 @@ class ORM
     if (isset($params['LIMIT'])) {
       $lim = "LIMIT {$params['LIMIT']} ";
     }
-    $sql = "SELECT * FROM $table " . self::$where . $ord .  $lim . " ;";
+    $sql = "SELECT * FROM $table " . $join . self::$where . $ord .  $lim . " ;";
     return Database::executeThis($sql, self::$arr);
   }
 
@@ -97,7 +115,7 @@ class ORM
   public static function getSpacesAgain($arr)
   {
     foreach ($arr as $key => $value) {
-      if ( preg_match('/\_/', $key) ) {
+      if (preg_match('/\_/', $key)) {
         $arr[preg_replace('/\_/', ' ',  $key)] = $arr[$key];
         unset($arr[$key]);
       }

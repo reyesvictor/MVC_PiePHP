@@ -1,13 +1,16 @@
-RewriteEngine On
+# RewriteEngine On
+# # RewriteBase /PiePHP/
 # RewriteBase /PiePHP/
+# RewriteCond %{REQUEST_FILENAME} !-f [OR]
+# # RewriteCond %{REQUEST_URI} ^/(webroot/.+)$ [OR]
+# RewriteCond %{REQUEST_URI} !^/PiePHP/(webroot/.+|index.php/|robots.txt)$ [OR]
+# RewriteCond %{REQUEST_URI} ^/PiePHP/logout/$
+# # RewriteCond %{REQUEST_URI} !^/(PiePHP/src/View/User/index.php/)
+# RewriteRule ^ /PiePHP/index.php/ [QSA,L]
+
+
+RewriteEngine On
 RewriteBase /PiePHP/
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
-# RewriteCond %{REQUEST_URI} ^/(webroot/.+)$ [OR]
-RewriteCond %{REQUEST_URI} !^/PiePHP/(webroot/.+|index.php/|robots.txt)$ [OR]
-RewriteCond %{REQUEST_URI} ^/PiePHP/logout/$
-# RewriteCond %{REQUEST_URI} !^/(PiePHP/src/View/User/index.php/)
-RewriteRule ^ /PiePHP/index.php/ [QSA,L]
-
-# RewriteEngine on
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteRule ^.*$ /PiePHP/src/View/User/index.php/
+RewriteCond %{REQUEST_URI} !^/PiePHP/(webroot/.+|index.php|robots.txt)$
+RewriteRule ^ index.php [QSA,L]

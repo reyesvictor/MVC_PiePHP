@@ -2,8 +2,12 @@
 
 namespace Model;
 
+
 class UserModel extends \Core\Entity
 {
+  // Vous devez donc représenter ce mécanisme dans vos models, et dans votre ORM
+  //$relations = [ $articles, $comments  ];
+
   public function login()
   {
     $sql = "SELECT `id`, `email` from USERS WHERE email = ? AND `password` = ? ; ";

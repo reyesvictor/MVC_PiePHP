@@ -24,12 +24,6 @@ function autoLoad($class)
     implode(DIRECTORY_SEPARATOR, ['.', '']),
     implode(DIRECTORY_SEPARATOR, ['.', 'src', '']),
     implode(DIRECTORY_SEPARATOR, ['..', 'src', '']),
-    // './src/',
-    // '../src/',
-    // './',
-    // '../',
-    // '../../',
-    // '../../../'
   ];
 
   for ($i = 0; $i < count($array); $i++) {

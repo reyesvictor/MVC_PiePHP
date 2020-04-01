@@ -8,6 +8,7 @@ class Entity
   static $dbname;
   static $getvars;
   static $id;
+  private static $relations;
 
   public function __construct($params = [])
   {
@@ -20,6 +21,9 @@ class Entity
       self::createParam($params);
     }
     self::$getvars = get_object_vars($this);
+    echo '--------<pre></br>';
+    var_dump(self::$getvars);
+    echo '--------</br></pre>';
   }
 
   public function get_db_name()
@@ -30,7 +34,9 @@ class Entity
   public function createParam($arr)
   {
     foreach ($arr as $key => $value) {
-      if ( preg_match('/ /', $key) ) {
+      if ( $key == 'relations' ) {
+        self::$relations = $value;
+      } else if ( preg_match('/ /', $key) ) {
         $this->{preg_replace('/ /', '_',  $key)} = $value; //defining my protected variables
       } else {
         $this->{$key} = $value; //defining my protected variables
@@ -46,6 +52,10 @@ class Entity
 
   public function modelRead()
   {
+    if ( is_array(self::$relations) && count(self::$relations) == 2) {
+      self::$getvars['hasmany'] = self::$relations['hasmany'];
+      self::$getvars['hasone'] = self::$relations['hasone'];
+    }
     return \Core\ORM::read(self::$dbname, self::$getvars);
   }
 
@@ -61,6 +71,10 @@ class Entity
 
   public function modelFind()
   {
+    if ( is_array(self::$relations) && count(self::$relations) == 2) {
+      self::$getvars['hasmany'] = self::$relations['hasmany'];
+      self::$getvars['hasone'] = self::$relations['hasone'];
+    }
     return \Core\ORM::find(self::$dbname, self::$getvars);
   }
 }

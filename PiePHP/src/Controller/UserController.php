@@ -119,7 +119,6 @@ class UserController extends \Core\Controller
         echo "<h3>Succesfull LOGIN :D, your id is : {$_SESSION['id']}</h3>";
         echo "<button><a href='/PiePHP/show'>Show All Users</a></button>";
         echo "<button><a href='/PiePHP/logout'>Logout</a></button>";
-        // $this->file = 'login';
       } else { //connect page after error
         echo '<h3>Wrong email or password :/</h3>';
         $this->file = 'login';
@@ -149,13 +148,36 @@ class UserController extends \Core\Controller
       // 'LIMIT' => '3',
     ];
     if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
-      $this->show = new \Model\UserModel($param);
-      $arr = $this->show->modelFind();
+      //Test Les Relationnels Model - One To Many--------------------
+      $this->onetomany = new \Model\UserModel([
+        'relations' => [  
+          'hasmany' => 'users',
+          'hasone' => 'comments',
+        ],
+        'WHERE' => [
+          'users.email' => 'victor.reyes@'
+        ],
+      ]);
+      //if count(results) == 2 then INNER JOIN
+      // SELECT * FROM comments JOIN users WHERE users.id = 2 ;
+      //OR
+      //SELECT * FROM comments JOIN users ON users.id=comments.id_users WHERE users.id = 2
+      $arr = $this->onetomany->modelFind();
+      //Fin de test---------------------------------------------------
+
+      //Test a garder=================================
+      // $this->show = new \Model\UserModel($param);
+      // $arr = $this->show->modelFind();
       // $arr = \Model\UserModel::modelFind();
+      //==============================================
       if (isset($arr) && count($arr) > 0) {
         if (isset($arr[0]) && is_array($arr[0])) {
           for ($i = 0; $i < count($arr); $i++) {
-            echo "<p>User n <b>{$arr[$i]['id']}</b>, email: {$arr[$i]['email']}</p>";
+            if ( isset($arr[$i]['content']) ) {
+              echo "<p>Comment by user n<b>{$arr[$i]['id']}</b>: {$arr[$i]['content']}</p>";
+            } else {
+              echo "<p>User n <b>{$arr[$i]['id']}</b>, email: {$arr[$i]['email']}</p>";
+            }
           }
         } else {
           echo "<p>User n <b>{$arr['id']}</b>, email: {$arr['email']}</p>";
