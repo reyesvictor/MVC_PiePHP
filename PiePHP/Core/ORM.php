@@ -37,6 +37,12 @@ class ORM
     return Database::executeThis($sql, self::$arr);
   }
  
+  public static function read_all($table) // retourne un tableau associatif de l' enregistrement
+  {
+    $sql = "SELECT * FROM $table ;";
+    return Database::executeThis($sql, self::$arr);
+  }
+
   public static function update($table, $fields) // retourne un booleen, here id should be $_SESSION['id']
   {
     self::$fields = $fields;
@@ -61,7 +67,7 @@ class ORM
   // INSERT INTO comments (content, id_users) VALUES ( 'This is a last comment', 2 );
   // Example get multiple comments from one user 
   // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
-  public static function find($table, $params)
+  public static function find($table, $params) //read_all
   { // retourne un tableau d'enregistrements
     $params = self::getSpacesAgain($params);
     $ord = '';

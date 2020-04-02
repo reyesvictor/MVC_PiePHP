@@ -59,6 +59,11 @@ class Entity
     return \Core\ORM::read(self::$dbname, self::$getvars);
   }
 
+  public function modelRead_all()
+  {
+    return \Core\ORM::read_all(self::$dbname);
+  }
+
   public function modelUpdate()
   {
     return \Core\ORM::update(self::$dbname, self::$getvars);
