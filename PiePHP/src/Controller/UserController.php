@@ -148,15 +148,15 @@ class UserController extends \Core\Controller
     //   'ORDER BY' => 'id DESC',
     //   // 'LIMIT' => '3',
     // ];
-    if (isset($id) && $id == '?') { //if ? then look for the first user in the database
+    if (isset($id) && $id['id'] == '?') { //if ? then look for the first user in the database
       $this->all_users = new \Model\UserModel();
       $arr = $this->all_users->modelRead_all();
-      $id = $arr[0]['id'];
+      $id = ['id' => $arr[0]['id'], 'col' => 'id' ];
     }
     if (isset($id)) {
       $param = [
         'WHERE' => [
-          'id' => $id,
+          $id['col'] => $id['id'],
           // 'users.email' => 'victor.reyes@hhh',
         ],
       ];
