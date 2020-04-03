@@ -148,7 +148,7 @@ class UserController extends \Core\Controller
     //   'ORDER BY' => 'id DESC',
     //   // 'LIMIT' => '3',
     // ];
-    if ( isset($id) && $id == '?' ) { //if ? then look for the first user in the database
+    if (isset($id) && $id == '?') { //if ? then look for the first user in the database
       $this->all_users = new \Model\UserModel();
       $arr = $this->all_users->modelRead_all();
       $id = $arr[0]['id'];
@@ -162,6 +162,7 @@ class UserController extends \Core\Controller
       ];
       $this->parametric = new \Model\UserModel($param);
       $arr = $this->parametric->modelRead();
+      $this->display($arr);
     }
     if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
       //Test Les Relationnels Model - One To Many--------------------
@@ -173,12 +174,13 @@ class UserController extends \Core\Controller
         'WHERE' => [
           'users.email' => 'victor.reyes@'
         ],
-      ]);
-      //if count(results) == 2 then INNER JOIN
-      // SELECT * FROM comments JOIN users WHERE users.id = 2 ;
-      //OR
-      //SELECT * FROM comments JOIN users ON users.id=comments.id_users WHERE users.id = 2
-      $arr = $this->onetomany->modelFind();
+        ]);
+        //if count(results) == 2 then INNER JOIN
+        // SELECT * FROM comments JOIN users WHERE users.id = 2 ;
+        //OR
+        //SELECT * FROM comments JOIN users ON users.id=comments.id_users WHERE users.id = 2
+        $arr = $this->onetomany->modelFind();
+        $this->display($arr);
       //Fin de test---------------------------------------------------
 
       //Test a garder=================================
@@ -187,24 +189,27 @@ class UserController extends \Core\Controller
       // $arr = \Model\UserModel::modelFind();
       //==============================================
     }
+    $this->file = 'show';
+  }
 
+  public function display($arr)
+  {
     //DISPLAY RESULTS
     if (isset($arr) && count($arr) > 0) {
-          if (isset($arr[0]) && is_array($arr[0])) {
-            for ($i = 0; $i < count($arr); $i++) {
-              if (isset($arr[$i]['content'])) {
-                echo "<p>Comment by user n<b>{$arr[$i]['id']}</b>: {$arr[$i]['content']}</p>";
-              } else {
-                echo "<p>User n <b>{$arr[$i]['id']}</b>, email: {$arr[$i]['email']}</p>";
-              }
-            }
+      if (isset($arr[0]) && is_array($arr[0])) {
+        for ($i = 0; $i < count($arr); $i++) {
+          if (isset($arr[$i]['content'])) {
+            echo "<p>Comment by user n<b>{$arr[$i]['id']}</b>: {$arr[$i]['content']}</p>";
           } else {
-            echo "<p>User n <b>{$arr['id']}</b>, email: {$arr['email']}</p>";
+            echo "<p>User n <b>{$arr[$i]['id']}</b>, email: {$arr[$i]['email']}</p>";
           }
-        } else {
-          echo '<p>There are no users results</p>';
         }
-    $this->file = 'show';
+      } else {
+        echo "<p>User n <b>{$arr['id']}</b>, email: {$arr['email']}</p>";
+      }
+    } else {
+      echo '<p>There are no users results</p>';
+    }
   }
 
   public function __destruct()
