@@ -26,14 +26,14 @@ class Router
         $arr[0] == 'user' && isset($arr[1]) && is_numeric($arr[1])
         || $arr[0] == 'user' && isset($arr[1]) && $arr[1] == '?'
       ) {
-        // Router::$id = $arr[1];
         Router::$id['col'] = 'id';
         Router::$id['id'] = $arr[1];
+        $url = '/user/{id}';
       } else if ($arr[0] == 'user' && isset($arr[1]) && preg_match('/@/', $arr[1])) {
         Router::$id['col'] = 'users.email';
         Router::$id['id'] = $arr[1];
+        $url = '/user/{id}';
       }
-      $url = '/user/{id}';
     }
     return array_key_exists($url, self::$routes) ? self::$routes[$url] : false;
   }
