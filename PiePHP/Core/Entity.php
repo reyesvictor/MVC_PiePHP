@@ -21,9 +21,6 @@ class Entity
       self::createParam($params);
     }
     self::$getvars = get_object_vars($this);
-    echo '--------<pre></br>';
-    var_dump(self::$getvars);
-    echo '--------</br></pre>';
   }
 
   public function get_db_name()

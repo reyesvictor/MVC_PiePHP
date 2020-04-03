@@ -26,8 +26,15 @@ class ORM
   // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
   public static function read($table, $fields) // retourne un tableau associatif de l' enregistrement
   {
-    self::$fields = $fields;
-    self::fieldMaker();
+    if ( isset($fields['WHERE']) ) {
+      self::$fields = $fields['WHERE']; 
+      self::fieldMaker();
+      unset($fields['WHERE']);
+    }
+    if ( count($fields) > 0 ) { //potentielle erreur future ?
+      self::$fields = $fields;
+      self::fieldMaker();
+    }
     $join = '';
     if (isset($fields['hasmany'])) {
       $table = $fields['hasone'];

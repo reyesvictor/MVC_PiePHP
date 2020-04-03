@@ -92,7 +92,12 @@ class Core
 
   protected function redirect()
   {
-    $cl = new $this->class ();
-    $cl->{$this->array['action'] . 'Action'}();
+    if ( Router::$id != '' ) {      
+      $cl = new $this->class ();
+      $cl->{$this->array['action'] . 'Action'}(Router::$id);
+    } else {
+      $cl = new $this->class ();
+      $cl->{$this->array['action'] . 'Action'}();
+    }
   }
 }
