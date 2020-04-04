@@ -153,8 +153,7 @@ class UserController extends \Core\Controller
       $this->arr = $this->pass[0];
       //ne sert plus, cest pour laffichage dans le show
       // $id = ['id' => $this->arr[0]['id'], 'col' => 'id'];
-    }
-    else if (isset($id)) {
+    } else if (isset($id)) {
       $param = [
         'WHERE' => [
           $id['col'] => $id['id'],
@@ -192,6 +191,7 @@ class UserController extends \Core\Controller
       //==============================================
     }
     $this->file = 'show';
+    $this->arr = ['cheval' => 'OMEGA CHEVAL'];
   }
 
   public function __destruct()
