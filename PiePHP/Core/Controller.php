@@ -56,50 +56,18 @@ class Controller
     $rp = [
       '/{{(.+)}}/' => '<?= htmlentities() ?>',
     ];
-    /*highlight_string("<?php\n\$data =\n" . var_export($array) . ";\n?>");    */
     $content = file_get_contents($f);
-    // var_dump($content);
-    if ($res = preg_match_all('/{{(.+)}}/', $content, $matches) != false) {
-      // var_dump($matches);
-      // $content = preg_replace('/{{/', '<?= htmlentities( ', $content);
-      /*
-      $content = preg_replace('/{{/', '<?= ( ', $content);
-      $content = preg_replace('/}}/', ' ) ?>', $content);
-      */
-      $content = preg_replace('/{{/', '', $content);
-      $content = preg_replace('/}}/', '', $content);
+    while ($res = preg_match_all('/{{(.+)}}/', $content, $matches)) {
+      $content = preg_replace('/{{/', '', $content, 1);
+      $content = preg_replace('/}}/', '', $content, 1);
+      $var_name = str_replace([' ', '$'], '', $matches[1][0]);
+      $var_fullname = str_replace([' '], '', $matches[1][0]);
+      $content = str_replace($var_fullname, htmlentities(self::$info[$var_name]), $content);
+    }
 
-      if (array_key_exists($key = str_replace([' ', '$'], '', $matches[1][0]), self::$info)) { // si la variable existe dans le array, on le replace
-
-        $var_preg = '/' . str_replace(' ', '', $matches[1][0]) . '/';
-        $var_name = str_replace(' ', '', $matches[1][0]);
-        $content = preg_replace($var_preg, self::$info[$key], $content);
-        $content = preg_replace("/$var_name/", self::$info[$key], $content);
-        $content = preg_replace("/" . $var_name . "/", self::$info[$key], $content);
-        $content = preg_replace("/^" . $var_name . "/", self::$info[$key], $content);
-        $content = preg_replace('/' . $var_name . '/', self::$info[$key], $content);
-        $content = preg_replace('/^' . $var_name . '/', self::$info[$key], $content);
-        $content = preg_replace("/^$var_name/", self::$info[$key], $content);
-        //ca remplace les 'e', why ????
-        $content = preg_replace('/:$cheval\b/i', self::$info[$key], $content);
-        $content = preg_replace('/:' . $var_name .  '\b/i', self::$info[$key], $content);
-        $content = preg_replace('/\b' . $var_name .  '\b/i', self::$info[$key], $content);
-        $content = preg_replace('/:' . $var_name .  '\b/', self::$info[$key], $content);
-        $content = preg_replace("/:$var_name\b/i", self::$info[$key], $content);
-        $content = preg_replace("/\b$var_name\b/i", self::$info[$key], $content);
-        $content = preg_replace("/:$var_name\b/", self::$info[$key], $content);
-        $content = preg_replace("/\b$var_name\b/", self::$info[$key], $content);
-
-        //WORKS 
-        $content = str_replace($var_name, self::$info[$key], $content);
-        // echo '--------<pre>';
-        // echo $key;
-        // echo '<br>';
-        // var_dump($var_name);
-        // echo '<br>';
-        // echo self::$info[$key];
-        // echo '</br>--------</br></pre>';
-      }
+    //  @if(count($records) === 1)
+    if ( $res = preg_match_all('/@if(.*?)@endif/s', $content, $matches)) {
+      var_dump($res);
     }
     return $content;
   }
