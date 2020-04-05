@@ -23,11 +23,32 @@ class Controller
       //Array accessile par parse()
       self::$info = $info;
       //Moteur de template
+
+
+      //EVAL marche
+      // $nbr = 8;
+      // eval("if ( $nbr == 8 ) {
+      //   echo '--------<pre>';
+      //   echo 'THIS IS NICE MY NIBBA<br>';
+      //   echo '<br>--------</br></pre>';
+      // }");
+
+      // $a = 6;
+      // eval('if ($a == 5) { 
+      //   echo "a égale 5"; 
+      //   echo "..."; 
+      // } else if ($a == 6) { 
+      //     echo "a égale 6"; 
+      //     echo "!!!"; 
+      //   } else { 
+      //     echo "a ne vaut ni 5 ni 6"; 
+      //   }');
+
       ob_start();
       // eval($this->parse($f));
       // eval("echo 'This is some really fine output.';");
       // eval("echo ". $this->parse($f) . ";");
-      echo $this->parse($f);
+      $this->parse($f);
       $view = ob_get_clean();
       // echo '--------<pre>';
       // var_dump($view);
@@ -66,9 +87,32 @@ class Controller
     }
 
     //  @if(count($records) === 1)
-    if ( $res = preg_match_all('/@if(.*?)@endif/s', $content, $matches)) {
-      var_dump($res);
+
+    while (preg_match_all('/@if(.*?)@endif/s', $content, $matches)) {
+      if (preg_match_all('/@if(.*?)@endif|\):|@else:/s', $content, $matches)) {
+        $content = preg_replace('/@if/', 'if', $content, 1);
+        while ( preg_match_all('/@elseif/', $content, $matches) ) {
+          $content = preg_replace('/@elseif/', '} else if', $content, 1);
+        }
+        while ( preg_match_all('/\)\:/', $content, $matches) ) {
+          $content = preg_replace('/\)\:/', ') {', $content, 1);
+        }
+        $content = preg_replace('/@else:/', '} else {', $content, 1);
+        $content = preg_replace('/@endif;/', '}-end-', $content, 1);
+      }
+      $a = 8;
+      $b = 13;
+      $arr = preg_split("@(?=if \()@", $content, 2, PREG_SPLIT_DELIM_CAPTURE);
+      $if = preg_split("/-end-/", $arr[1], 2);
+
+      echo $arr[0];
+      eval($if[0]);
+      $content = $if[1];
+      // $input = "The address is http://stackoverflow.com/";
+      // $parts = preg_split('@(?=http://)@', $input);
+      // var_dump($parts);
     }
+    echo $content;
     return $content;
   }
 }
