@@ -181,7 +181,7 @@ class UserController extends \Core\Controller
       // SELECT * FROM comments JOIN users WHERE users.id = 2 ;
       //OR
       //SELECT * FROM comments JOIN users ON users.id=comments.id_users WHERE users.id = 2
-      $this->arr = $this->onetomany->modelFind();
+      $this->arr['users'] = $this->onetomany->modelFind();
       //Fin de test---------------------------------------------------
 
       //Test a garder=================================
@@ -194,13 +194,15 @@ class UserController extends \Core\Controller
     $this->arr['welcome_text'] = 'Welcome to the user list page<br>';
     $this->arr['middle_text'] = 'Here you can see all the users subcribed<br>';
     $this->arr['end_text'] = 'You reached the botttom';
-    // var_dump($this->arr); 
+    // var_dump($this->arr);
   }
 
   public function __destruct()
   {
     if (isset($this->file) && isset($this->arr)) {
-      $this->render($this->file, ['info' => $this->arr]);
+      $this->render($this->file, $this->arr);
+      //quelle utilité de le passer comme ça ?
+      // $this->render($this->file, ['info'=> $this->arr]);
     } else {
       $this->render($this->file);
     }
