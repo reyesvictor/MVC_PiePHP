@@ -41,33 +41,29 @@ class Controller
   protected function parse($f)
   {
     static::$content = file_get_contents($f);
-
     // $test = preg_split('@(?=\@foreach)|(?=\@endforeach)@s', static::$content);  
     // $test = preg_split('@(?=(\@foreach(.*?)\@endforeach)|\{\{)@s', static::$content  );  
 
-    //on recupere toutes les lignes
-    //on boucle dessus pour voir les fonctions a faire
-    //on stock les choses a faire dans un array
-    //on lance tout
+    //recuperer toutes les lignes
+    //boucler dessus pour voir les fonctions a faire
+    //stocker les fonctions a faire dans un array
+    //les lancer
 
     //Compileur fait main, à l'ancienne
     $all_lines = explode(PHP_EOL, static::$content);
     $list = [];
-
-    for ($i = 0; $i < count($all_lines); $i++) {
+    for ($i = 0; $i < count($all_lines); $i++) { //Analyse line by line the page
       if (preg_match_all('/\@foreach/', $all_lines[$i])) {
         array_push($list, 'parseforeach');
       } else if (preg_match_all('/\@if/', $all_lines[$i])) {
         array_push($list, 'parseif');
       } else if (preg_match_all('/{{(.+)}}/', $all_lines[$i])) {
         array_push($list, 'parsestring');
-      }
+      } 
     }
-
-    for ($i = 0; $i < count($list); $i++) {
+    for ($i = 0; $i < count($list); $i++) { //Call all the functions in order
       $this->{$list[$i]}();
     }
-
     return static::$content;
   }
 

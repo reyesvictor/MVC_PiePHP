@@ -150,41 +150,62 @@ class UserController extends \Core\Controller
     if (isset($id) && $id['id'] == '?') { //if ? then look for the first user in the database
       $this->all_users = new \Model\UserModel();
       $this->pass = $this->all_users->modelRead_all();
-      $this->arr = $this->pass[0];
+      $this->arr['users'] = $this->pass[0];
       //ne sert plus, cest pour laffichage dans le show
       // $id = ['id' => $this->arr[0]['id'], 'col' => 'id'];
     } else if (isset($id)) {
       $param = [
-        'WHERE' => [
-          $id['col'] => $id['id'],
-          // 'users.email' => 'victor.reyes@hhh',
-        ],
-      ];
-      $this->parametric = new \Model\UserModel($param);
-
-      //MONTRER PREMIER UTILISATEUR
-      // $this->arr = $this->parametric->modelRead();
-      //MONTRE TOUTE LA LISTE DES USERS, WTF ????????????????????????????????????????????????????????????????????????????????//
-      $this->arr[0] = $this->parametric->modelRead();
-    } else if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
-      //Test Les Relationnels Model - One To Many--------------------
-      $this->onetomany = new \Model\UserModel([
         'relations' => [
           'hasmany' => 'users',
           'hasone' => 'comments',
         ],
         'WHERE' => [
+          // $id['col'] => $id['id'],
+          'users.email' => 'victor.reyes@hhh',
+        ],
+      ];
+      $this->parametric = new \Model\UserModel($param);
+
+      // Résultat 
+      // $this->arr = $this->parametric->modelRead();
+      // $this->arr = $this->parametric->modelRead();
+      $this->arr['users'] = $this->parametric->modelFind();
+      var_dump($this->arr);
+    } else if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
+      //TEST POUR LES RELATION MODEL: THEO STYLE, 1 => N ------------------
+
+      //ETAPE 1 : passer en parametre les relations dans UserModel
+      //ETAPE 2 : generer les variables dans UserModel dans le construct
+      // construct => foreach dans relations, read -> has one et read all -> many
+      // many to many ? 
+      // loops infinis à éviter?
+      //ETAPE 3 : executer chaque ligne de relations (hasmany, hasone, manytomany)
+      //ETAPE 4 : return un object si possible, verifier si la classe existe et generer un objet en fonction ????
+      // ????
+
+      //FIN : UN ARRAY DES COMMENTS, UN OBJET AVEC SES VARIABLES, UN ARRAY DOBJETS... 
+
+      $params = [
+        'relations' => [
+          // 'hasone' => 'comments',
+          // 'hasmany' => 'users',
+          // 'hasone' => ['table' => 'comments', 'key' => 'user_id'],
+          'hasmany' => ['table' => 'comments', 'key' => 'user_id'],
+        ],
+        'WHERE' => [
           'users.email' => 'victor.reyes@'
         ],
-      ]);
-      //if count(results) == 2 then INNER JOIN
-      // SELECT * FROM comments JOIN users WHERE users.id = 2 ;
-      //OR
-      //SELECT * FROM comments JOIN users ON users.id=comments.id_users WHERE users.id = 2
+      ];
+      $this->onetomany = new \Model\UserModel($params);
       $this->arr['users'] = $this->onetomany->modelFind();
       //Fin de test---------------------------------------------------
 
       //Test a garder=================================
+      // $param = [
+      //   'WHERE' => [
+      //     $id['col'] => $id['id'],
+      //     // 'users.email' => 'victor.reyes@hhh',
+      //   ]];
       // $this->show = new \Model\UserModel($param);
       // $this->arr = $this->show->modelFind();  
       // $this->arr = \Model\UserModel::modelFind();

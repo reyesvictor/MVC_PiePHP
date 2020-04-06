@@ -18,7 +18,6 @@ class Router
   public static function get($url)
   {
     //decomposer le $_SERVER pour quil recupere larray si la path correspond a /user/delete/
-    //ID, faire email aussi
     $arr = explode('/', $url);
     $arr = array_values(array_filter($arr));
     if (isset($arr) && count($arr) > 0) {

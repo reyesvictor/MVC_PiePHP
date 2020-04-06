@@ -14,6 +14,7 @@ class Entity
   {
     self::get_db_name();
     self::$db = Database::connect();
+    
     if (isset($params['id'])) { //read user info and create array
       $newparams = ORM::read(self::$dbname, $params['id']);
       self::createParam($newparams);
@@ -31,8 +32,11 @@ class Entity
   public function createParam($arr)
   {
     foreach ($arr as $key => $value) {
-      if ( $key == 'relations' ) {
-        self::$relations = $value;
+      // if ( $key == 'relations' ) {
+      //   self::$relations = $value;
+      if ( $key == 'relations' && isset($value['relation']['hasmany']) ) {
+        $this->hasone = $value['relation']['hasmany'];
+        $this->modelRead_all();
       } else if ( preg_match('/ /', $key) ) {
         $this->{preg_replace('/ /', '_',  $key)} = $value; //defining my protected variables
       } else {
