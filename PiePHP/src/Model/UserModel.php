@@ -8,6 +8,12 @@ class UserModel extends \Core\Entity
   // Vous devez donc représenter ce mécanisme dans vos models, et dans votre ORM
   //$relations = [ $articles, $comments  ];
 
+  public $relations = [
+    'hasone' => ['table' => 'promos', 'key' => 'promo_id'],
+    'hasmany' => ['table' => 'comments', 'key' => 'user_id'],
+    'manytomany' => ['table1' => 'users', 'table2' => 'games'],
+  ];
+
   public function login()
   {
     $sql = "SELECT `id`, `email` from USERS WHERE email = ? AND `password` = ? ; ";

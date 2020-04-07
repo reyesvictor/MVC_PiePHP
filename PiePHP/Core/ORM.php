@@ -31,16 +31,19 @@ class ORM
       self::fieldMaker();
       unset($fields['WHERE']);
     }
-    if ( count($fields) > 0 ) { //potentielle erreur future ?
+    if ( is_array($fields) && count($fields) > 0 ) { //potentielle erreur future ?
       self::$fields = $fields;
       self::fieldMaker();
     }
     $join = '';
     if (isset($fields['hasmany'])) {
+      //ADAPTER LA REQUETE POUR PRENDRE LES PARAMETRES TABLE ET KEY
+      // ET VOIR QUAND CREER LOBJET, AVANT OU APRES AVOIR FAIT LA REQUETE ?
       $table = $fields['hasone'];
       $join = "JOIN {$fields['hasmany']} ";
     }
     $sql = "SELECT * FROM $table " . $join . self::$where . ";";
+    var_dump($sql);
     return Database::executeThis($sql, self::$arr);
   }
  
@@ -80,10 +83,10 @@ class ORM
     $ord = '';
     $lim = '';
     $join = '';
-    if (isset($params['hasmany'])) {
-      $table = $params['hasone'];
-      $join = "JOIN {$params['hasmany']} ";
-    }
+    // if (isset($params['hasmany'])) {
+    //   $table = $params['has many'];
+    //   $join = "JOIN {$params['hasmany']} ";
+    // }
     if (isset($params['WHERE'])) {
       self::$fields = $params['WHERE'];
       self::fieldMaker();

@@ -184,20 +184,14 @@ class UserController extends \Core\Controller
       // ????
 
       //FIN : UN ARRAY DES COMMENTS, UN OBJET AVEC SES VARIABLES, UN ARRAY DOBJETS... 
-
       $params = [
-        'relations' => [
-          // 'hasone' => 'comments',
-          // 'hasmany' => 'users',
-          // 'hasone' => ['table' => 'comments', 'key' => 'user_id'],
-          'hasmany' => ['table' => 'comments', 'key' => 'user_id'],
-        ],
-        'WHERE' => [
-          'users.email' => 'victor.reyes@'
-        ],
+        'id' => $_SESSION['id'],
+        // 'WHERE' => [
+        //   'users.email' => 'victor.reyes@'
+        // ],
       ];
       $this->onetomany = new \Model\UserModel($params);
-      $this->arr['users'] = $this->onetomany->modelFind();
+      $this->arr['users'] = $this->onetomany->modelRead();
       //Fin de test---------------------------------------------------
 
       //Test a garder=================================
@@ -215,7 +209,7 @@ class UserController extends \Core\Controller
     $this->arr['welcome_text'] = 'Welcome to the user list page<br>';
     $this->arr['middle_text'] = 'Here you can see all the users subcribed<br>';
     $this->arr['end_text'] = 'You reached the botttom';
-    // var_dump($this->arr);
+    var_dump($this->arr);
   }
 
   public function __destruct()

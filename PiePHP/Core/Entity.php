@@ -7,16 +7,14 @@ class Entity
   static $db;
   static $dbname;
   static $getvars;
-  static $id;
-  private static $relations;
+  // private static $relations;
 
   public function __construct($params = [])
   {
     self::get_db_name();
     self::$db = Database::connect();
-    
     if (isset($params['id'])) { //read user info and create array
-      $newparams = ORM::read(self::$dbname, $params['id']);
+      $newparams = ORM::read(self::$dbname, ['WHERE' => [ self::$dbname . ".id" => $params['id']]]);
       self::createParam($newparams);
     } else {
       self::createParam($params);
@@ -33,11 +31,11 @@ class Entity
   {
     foreach ($arr as $key => $value) {
       // if ( $key == 'relations' ) {
-      //   self::$relations = $value;
-      if ( $key == 'relations' && isset($value['relation']['hasmany']) ) {
+      //   $this->relations = $value;
+      if ($key == 'relations' && isset($value['relation']['hasmany'])) {
         $this->hasone = $value['relation']['hasmany'];
         $this->modelRead_all();
-      } else if ( preg_match('/ /', $key) ) {
+      } else if (preg_match('/ /', $key)) {
         $this->{preg_replace('/ /', '_',  $key)} = $value; //defining my protected variables
       } else {
         $this->{$key} = $value; //defining my protected variables
@@ -48,15 +46,15 @@ class Entity
   //APPEL DES 5 KAGES
   public function modelCreate()
   {
-    return self::$id = \Core\ORM::create(self::$dbname, self::$getvars);
+    return \Core\ORM::create(self::$dbname, self::$getvars);
   }
 
   public function modelRead()
   {
-    if ( is_array(self::$relations) && count(self::$relations) == 2) {
-      self::$getvars['hasmany'] = self::$relations['hasmany'];
-      self::$getvars['hasone'] = self::$relations['hasone'];
+    if (isset($this->relations) && is_array($this->relations) && count($this->relations) > 0) {
+      $this->verifyRelations();
     }
+    var_dump(self::$getvars);
     return \Core\ORM::read(self::$dbname, self::$getvars);
   }
 
@@ -77,10 +75,22 @@ class Entity
 
   public function modelFind()
   {
-    if ( is_array(self::$relations) && count(self::$relations) == 2) {
-      self::$getvars['hasmany'] = self::$relations['hasmany'];
-      self::$getvars['hasone'] = self::$relations['hasone'];
+    if (isset($this->relations) && is_array($this->relations) && count($this->relations) > 0) {
+      $this->verifyRelations();
     }
     return \Core\ORM::find(self::$dbname, self::$getvars);
+  }
+
+  protected function verifyRelations()
+  {
+    if (isset($this->relations['hasone'])) {
+      self::$getvars['hasone'] = $this->relations['hasone'];
+    }
+    if (isset($this->relations['hasmany'])) {
+      self::$getvars['hasmany'] = $this->relations['hasmany'];
+    }
+    if (isset($this->relations['manytomany'])) {
+      self::$getvars['manytomany'] = $this->relations['manytomany'];
+    }
   }
 }
