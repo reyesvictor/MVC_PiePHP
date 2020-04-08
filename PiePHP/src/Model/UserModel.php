@@ -9,8 +9,12 @@ class UserModel extends \Core\Entity
   //$relations = [ $articles, $comments  ];
 
   public $relations = [
-    'hasone' => ['table' => 'promos', 'key' => 'promo_id'],
-    'hasmany' => ['table' => 'comments', 'key' => 'user_id'],
+    'hasone' => [
+      ['table' => 'promos', 'key' => 'promo_id'],
+    ], 
+    'hasmany' => [
+      ['table' => 'comments', 'key' => 'user_id'],
+    ],
     'manytomany' => ['table1' => 'users', 'table2' => 'games'],
   ];
 

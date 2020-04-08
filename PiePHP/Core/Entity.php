@@ -14,12 +14,42 @@ class Entity
     self::get_db_name();
     self::$db = Database::connect();
     if (isset($params['id'])) { //read user info and create array
-      $newparams = ORM::read(self::$dbname, ['WHERE' => [ self::$dbname . ".id" => $params['id']]]);
+      $newparams = ORM::read(
+        self::$dbname,
+        [
+          'WHERE' => [
+            self::$dbname . ".id" => $params['id']
+          ]
+        ]
+      );
       self::createParam($newparams);
     } else {
       self::createParam($params);
     }
-    self::$getvars = get_object_vars($this);
+    //RELATIONS
+    if (isset($this->relations['hasmany']) && isset($this->id)) {
+      for ($i = 0; $i < count($this->relations['hasmany']); $i++) {
+        $this->{$this->relations['hasmany'][$i]['table']}[$i] = \Core\ORM::find(
+          $this->relations['hasmany'][$i]['table'], [
+          'WHERE' => [
+            $this->relations['hasmany'][$i]['key'] => $this->id,
+          ]
+        ]);
+      }
+    }
+    if (isset($this->relations['hasone']) && isset($this->id)) {
+      for ($i = 0; $i < count($this->relations['hasone']); $i++) {
+        $this->{$this->relations['hasone'][$i]['table']}[$i] = \Core\ORM::find(
+          $this->relations['hasone'][$i]['table'], [
+          'WHERE' => [
+            self::$dbname . '.id' => $this->id,
+          ], 
+          'JOIN' => " JOIN " . self::$dbname . " ON ( {$this->relations['hasone'][$i]['key']} = 
+          {$this->relations['hasone'][$i]['table']}.id ) ",
+        ]);
+      }
+    }
+   self::$getvars = get_object_vars($this);
   }
 
   public function get_db_name()
@@ -32,10 +62,7 @@ class Entity
     foreach ($arr as $key => $value) {
       // if ( $key == 'relations' ) {
       //   $this->relations = $value;
-      if ($key == 'relations' && isset($value['relation']['hasmany'])) {
-        $this->hasone = $value['relation']['hasmany'];
-        $this->modelRead_all();
-      } else if (preg_match('/ /', $key)) {
+      if (preg_match('/ /', $key)) {
         $this->{preg_replace('/ /', '_',  $key)} = $value; //defining my protected variables
       } else {
         $this->{$key} = $value; //defining my protected variables

@@ -92,7 +92,7 @@ class Core
 
   protected function redirect()
   {
-    if ( isset(Router::$id) && count(Router::$id) > 1 ) {
+    if ( isset(Router::$id) ) {
       $cl = new $this->class ();
       $cl->{$this->array['action'] . 'Action'}(Router::$id);
     } else {

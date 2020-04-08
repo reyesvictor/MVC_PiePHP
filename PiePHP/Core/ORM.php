@@ -26,27 +26,21 @@ class ORM
   // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
   public static function read($table, $fields) // retourne un tableau associatif de l' enregistrement
   {
-    if ( isset($fields['WHERE']) ) {
-      self::$fields = $fields['WHERE']; 
+    if (isset($fields['WHERE'])) {
+      self::$fields = $fields['WHERE'];
       self::fieldMaker();
       unset($fields['WHERE']);
     }
-    if ( is_array($fields) && count($fields) > 0 ) { //potentielle erreur future ?
+    if (is_array($fields) && count($fields) > 0) { //potentielle erreur future ?
       self::$fields = $fields;
       self::fieldMaker();
     }
-    $join = '';
-    if (isset($fields['hasmany'])) {
-      //ADAPTER LA REQUETE POUR PRENDRE LES PARAMETRES TABLE ET KEY
-      // ET VOIR QUAND CREER LOBJET, AVANT OU APRES AVOIR FAIT LA REQUETE ?
-      $table = $fields['hasone'];
-      $join = "JOIN {$fields['hasmany']} ";
-    }
-    $sql = "SELECT * FROM $table " . $join . self::$where . ";";
-    var_dump($sql);
-    return Database::executeThis($sql, self::$arr);
+    $sql = "SELECT * FROM $table " . self::$where . ";";
+
+    $ret = Database::executeThis($sql, self::$arr);
+    return $ret;
   }
- 
+
   public static function read_all($table) // retourne un tableau associatif de l' enregistrement
   {
     $sql = "SELECT * FROM $table ;";
@@ -77,7 +71,7 @@ class ORM
   // INSERT INTO comments (content, id_users) VALUES ( 'This is a last comment', 2 );
   // Example get multiple comments from one user 
   // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
-  public static function find($table, $params) //read_all
+  public static function find($table, $params)
   { // retourne un tableau d'enregistrements
     $params = self::getSpacesAgain($params);
     $ord = '';
@@ -97,8 +91,27 @@ class ORM
     if (isset($params['LIMIT'])) {
       $lim = "LIMIT {$params['LIMIT']} ";
     }
+    if (isset($params['JOIN'])) {
+      $join = $params['JOIN'];
+    }
     $sql = "SELECT * FROM $table " . $join . self::$where . $ord .  $lim . " ;";
-    return Database::executeThis($sql, self::$arr);
+    $class = '\Model\\' . substr(ucfirst($table), 0, -1) . 'Model';
+    $ret = Database::executeThis($sql, self::$arr);
+    var_dump($class);
+    if (class_exists($class)) {
+      $obj = new $class();
+      if (isset($ret[0])) {
+        foreach ($ret as $key => $value) {
+          $obj->{substr($table, 0, -1)}[$key] = $value;
+        }
+      } else {
+        $obj->{substr($table, 0, -1)} = $ret;
+      }
+      unset($obj->relations);
+      return $obj;
+    } else {
+      return $ret;
+    }
   }
 
   public static function fieldMaker()

@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class CommentModel
+class PromoModel
 {
   public function __construct() {
   }

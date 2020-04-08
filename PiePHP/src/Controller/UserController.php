@@ -147,33 +147,32 @@ class UserController extends \Core\Controller
     //   'ORDER BY' => 'id DESC',
     //   // 'LIMIT' => '3',
     // ];
-    if (isset($id) && $id['id'] == '?') { //if ? then look for the first user in the database
+    if (isset($id) && $id  == '?') { //if ? then look for the first user in the database
       $this->all_users = new \Model\UserModel();
       $this->pass = $this->all_users->modelRead_all();
       $this->arr['users'] = $this->pass[0];
       //ne sert plus, cest pour laffichage dans le show
       // $id = ['id' => $this->arr[0]['id'], 'col' => 'id'];
     } else if (isset($id)) {
-      $param = [
-        'relations' => [
-          'hasmany' => 'users',
-          'hasone' => 'comments',
-        ],
-        'WHERE' => [
-          // $id['col'] => $id['id'],
-          'users.email' => 'victor.reyes@hhh',
-        ],
-      ];
-      $this->parametric = new \Model\UserModel($param);
-
+      
+      
+      
+      $users = new \Model\UserModel(['id' => $id]);
+      unset($users->relations); 
+      $users->comments[0]->display();
+      $this->arr['users'] = $users;
+      var_dump($users);
+      echo '<hr>';
       // Résultat 
-      // $this->arr = $this->parametric->modelRead();
-      // $this->arr = $this->parametric->modelRead();
-      $this->arr['users'] = $this->parametric->modelFind();
-      var_dump($this->arr);
+      // $this->arr['users'] = $this->parametric->modelFind();
+      
+      echo 'The users ' . $users->promos[0]->promo['email'] , ' had a ' . $users->promos[0]->promo['content'] . ' reduction';
+      
+      
+      
     } else if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
       //TEST POUR LES RELATION MODEL: THEO STYLE, 1 => N ------------------
-
+      
       //ETAPE 1 : passer en parametre les relations dans UserModel
       //ETAPE 2 : generer les variables dans UserModel dans le construct
       // construct => foreach dans relations, read -> has one et read all -> many
@@ -182,17 +181,17 @@ class UserController extends \Core\Controller
       //ETAPE 3 : executer chaque ligne de relations (hasmany, hasone, manytomany)
       //ETAPE 4 : return un object si possible, verifier si la classe existe et generer un objet en fonction ????
       // ????
-
+      
       //FIN : UN ARRAY DES COMMENTS, UN OBJET AVEC SES VARIABLES, UN ARRAY DOBJETS... 
       $params = [
         'id' => $_SESSION['id'],
         // 'WHERE' => [
-        //   'users.email' => 'victor.reyes@'
-        // ],
-      ];
-      $this->onetomany = new \Model\UserModel($params);
-      $this->arr['users'] = $this->onetomany->modelRead();
-      //Fin de test---------------------------------------------------
+          //   'users.email' => 'victor.reyes@'
+          // ],
+        ];
+        $this->onetomany = new \Model\UserModel($params);
+        $this->arr['users'] = $this->onetomany->modelRead();
+        //Fin de test---------------------------------------------------
 
       //Test a garder=================================
       // $param = [
@@ -209,7 +208,7 @@ class UserController extends \Core\Controller
     $this->arr['welcome_text'] = 'Welcome to the user list page<br>';
     $this->arr['middle_text'] = 'Here you can see all the users subcribed<br>';
     $this->arr['end_text'] = 'You reached the botttom';
-    var_dump($this->arr);
+    // var_dump($this->arr);
   }
 
   public function __destruct()

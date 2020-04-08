@@ -6,10 +6,43 @@ FOREIGN KEY (`id_users`) REFERENCES `users`(id)
 );
 
 --NOUVELLE TABLE
+DROP TABLE users;
 DROP TABLE users_comments;
 DROP TABLE users_games;
 DROP TABLE comments;
 DROP TABLE games;
+
+create table users(
+  id int(9) primary key not null AUTO_INCREMENT,
+  email varchar(255) not null,
+  password varchar(255) not null,
+  promo_id int(9) not null,
+  foreign key(promo_id) references promos(id)
+);
+INSERT INTO comments (email, password, promo_id) VALUES ( 'victor1', 'root', 1);
+INSERT INTO comments (email, password, promo_id) VALUES ( 'victor2', 'root', 2);
+INSERT INTO comments (email, password, promo_id) VALUES ( 'victor3', 'root', 3);
+INSERT INTO comments (email, password, promo_id) VALUES ( 'victor4', 'root', 4);
+
+ALTER TABLE users DROP COLUMN promo_id;
+ALTER TABLE users ADD promo_id int(9) not null;
+ALTER TABLE users ADD FOREIGN KEY(`promo_id`) references `promos`(`id`);
+-- Pour que ca marche il faut des données dans la table (pour tous les champs ?)
+
+-- ALTER TABLE submittedForecast
+--   ADD CONSTRAINT FOREIGN KEY (data) REFERENCES blobs (id);
+
+
+create table comments(
+  id int(9) primary key not null AUTO_INCREMENT,
+  content varchar(255) not null,
+  user_id int(9) not null, 
+  foreign key(user_id) references users(id)
+);
+INSERT INTO comments (content, user_id) VALUES ( 'This is a comment', 2 );
+INSERT INTO comments (content, user_id) VALUES ( 'This is another comment', 2 );
+INSERT INTO comments (content, user_id) VALUES ( 'This is a last comment', 2 );
+
 
 create table comments(
   id int(9) primary key not null AUTO_INCREMENT,
@@ -66,20 +99,6 @@ INSERT INTO promos (content) VALUES ( '-50%');
 INSERT INTO promos (content) VALUES ( '-25%');
 INSERT INTO promos (content) VALUES ( '-75%');
 INSERT INTO promos (content) VALUES ( '-100%');
-
-create table users_promos(
-  id int(9) primary key not null AUTO_INCREMENT,
-  user_id int(9) not null UNIQUE,
-  promo_id int(9) not null, 
-  foreign key(user_id) references users(id),
-  foreign key(promo_id) references promos(id)
-);
-INSERT INTO users_promos (user_id, promo_id) VALUES (2, 4);
-INSERT INTO users_promos (user_id, promo_id) VALUES (3, 3);
-INSERT INTO users_promos (user_id, promo_id) VALUES (4, 2);
-INSERT INTO users_promos (user_id, promo_id) VALUES (5, 3);
-INSERT INTO users_promos (user_id, promo_id) VALUES (6, 1);
-INSERT INTO users_promos (user_id, promo_id) VALUES (7, 1);
 --END NEW-----------------------------------------------------------------
 
 
