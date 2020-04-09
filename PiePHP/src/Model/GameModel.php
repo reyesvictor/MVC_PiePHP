@@ -2,13 +2,13 @@
 
 namespace Model;
 
-class PromoModel
+class GameModel
 {
   public function __construct() {
   }
   
   public function display() {
-    echo 'DISPLAY OF PromoModel';
+    echo 'DISPLAY OF GameModel';
     var_dump($this);
     echo '<hr>';
   }

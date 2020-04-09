@@ -22,7 +22,12 @@ class Entity
           ]
         ]
       );
-      self::createParam($newparams);
+      if (count($newparams) === 0) {
+        echo 'This user doesnt exist';
+        return;
+      } else {
+        self::createParam($newparams);
+      }
     } else {
       self::createParam($params);
     }
@@ -30,26 +35,48 @@ class Entity
     if (isset($this->relations['hasmany']) && isset($this->id)) {
       for ($i = 0; $i < count($this->relations['hasmany']); $i++) {
         $this->{$this->relations['hasmany'][$i]['table']}[$i] = \Core\ORM::find(
-          $this->relations['hasmany'][$i]['table'], [
-          'WHERE' => [
-            $this->relations['hasmany'][$i]['key'] => $this->id,
+          $this->relations['hasmany'][$i]['table'],
+          [
+            'WHERE' => [
+              $this->relations['hasmany'][$i]['key'] => $this->id,
+            ]
           ]
-        ]);
+        );
       }
     }
     if (isset($this->relations['hasone']) && isset($this->id)) {
       for ($i = 0; $i < count($this->relations['hasone']); $i++) {
+        //Alternative, faire une premiere requete pour recuperer le id de promo, puis chercher dans la table.
+        //A continuer
+        $ret = ORM::read($this->relations['hasone'][$i]['table']);
+
+        //methode avec join
         $this->{$this->relations['hasone'][$i]['table']}[$i] = \Core\ORM::find(
-          $this->relations['hasone'][$i]['table'], [
-          'WHERE' => [
-            self::$dbname . '.id' => $this->id,
-          ], 
-          'JOIN' => " JOIN " . self::$dbname . " ON ( {$this->relations['hasone'][$i]['key']} = 
-          {$this->relations['hasone'][$i]['table']}.id ) ",
-        ]);
+          $this->relations['hasone'][$i]['table'],
+          [
+            'JOIN' => " JOIN " . self::$dbname  .  '_' . $this->relations['hasone'][$i]['table'] .
+              " ON ( " . self::$dbname  .  '_' .  $this->relations['hasone'][$i]['table'] . '.' . $this->relations['hasone'][$i]['key'] . " = " .
+              $this->relations['hasone'][$i]['table'] . ".id ) ",
+            'WHERE' => [
+              self::$dbname  .  '_' . $this->relations['hasone'][$i]['table'] . '.' . substr(self::$dbname, 0, -1) . '_id' => $this->id,
+            ],
+          ]
+        );
       }
     }
-   self::$getvars = get_object_vars($this);
+    if (isset($this->relations['manytomany']) && isset($this->id)) {
+      for ($i = 0; $i < count($this->relations['manytomany']); $i++) {
+        $this->{$this->relations['manytomany'][$i]['table']}[$i] = \Core\ORM::find(
+          $this->relations['manytomany'][$i]['table'],
+          [
+            'JOIN' => " JOIN " . self::$dbname  .  '_' . $this->relations['manytomany'][$i]['table'] .
+              " ON ( " . self::$dbname  .  '_' .  $this->relations['manytomany'][$i]['table'] . '.' . $this->relations['manytomany'][$i]['key'] . " = " .
+              $this->relations['manytomany'][$i]['table'] . ".id ) ",
+          ]
+        );
+      }
+    }
+    self::$getvars = get_object_vars($this);
   }
 
   public function get_db_name()

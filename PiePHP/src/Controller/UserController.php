@@ -117,7 +117,7 @@ class UserController extends \Core\Controller
       $this->add = new \Model\UserModel(\Core\Request::$post);
       if ($this->add->login() != false) { //login action
         echo "<h3>Succesfull LOGIN :D, your id is : {$_SESSION['id']}</h3>";
-        echo "<button><a href='/PiePHP/show'>Show All Users</a></button>";
+        echo "<button><a href='/PiePHP/show'>Show</a></button>";
         echo "<button><a href='/PiePHP/logout'>Logout</a></button>";
       } else { //connect page after error
         echo '<h3>Wrong email or password :/</h3>';
@@ -155,21 +155,25 @@ class UserController extends \Core\Controller
       // $id = ['id' => $this->arr[0]['id'], 'col' => 'id'];
     } else if (isset($id)) {
       
-      
-      
       $users = new \Model\UserModel(['id' => $id]);
-      unset($users->relations); 
-      $users->comments[0]->display();
-      $this->arr['users'] = $users;
+      unset($users->relations);
+      echo '<hr>'; 
       var_dump($users);
-      echo '<hr>';
-      // Résultat 
-      // $this->arr['users'] = $this->parametric->modelFind();
-      
-      echo 'The users ' . $users->promos[0]->promo['email'] , ' had a ' . $users->promos[0]->promo['content'] . ' reduction';
-      
-      
-      
+      if ( !isset($users->email) ) {
+        echo 'This user doesnt exist<br>';
+      }
+      else if ( !isset($users->promos[0]->promo['content']) ) {
+        echo 'The users ' . $users->email , ' didn\'t had a reduction<br>';
+      } else {
+        $users->comments[0]->display();
+        $users->promos[0]->display();
+        // $users->games[0]->display();
+        $this->arr['users'] = $users;
+        echo 'The user ' . $users->email , ' had a ' . $users->promos[0]->promo['content'] . ' reduction<br>';
+        foreach ($users->games[0]->game as $key => $game) {
+          echo 'The user n ' . $game['user_id'] , ' has played this game: ' . $game['content'] . '<br>';
+        }
+      }
     } else if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
       //TEST POUR LES RELATION MODEL: THEO STYLE, 1 => N ------------------
       
@@ -183,16 +187,28 @@ class UserController extends \Core\Controller
       // ????
       
       //FIN : UN ARRAY DES COMMENTS, UN OBJET AVEC SES VARIABLES, UN ARRAY DOBJETS... 
-      $params = [
-        'id' => $_SESSION['id'],
-        // 'WHERE' => [
-          //   'users.email' => 'victor.reyes@'
-          // ],
-        ];
-        $this->onetomany = new \Model\UserModel($params);
-        $this->arr['users'] = $this->onetomany->modelRead();
-        //Fin de test---------------------------------------------------
 
+        //Fin de test---------------------------------------------------
+        $users = new \Model\UserModel(['id' => $_SESSION['id']]);
+        unset($users->relations);
+        echo '<hr>'; 
+        var_dump($users);
+        if ( !isset($users->email) ) {
+          echo 'This user doesnt exist<br>';
+        }
+        else if ( !isset($users->promos[0]->promo['content']) ) {
+          echo 'The users ' . $users->email , ' didn\'t had a reduction<br>';
+        } else {
+          $users->comments[0]->display();
+          $users->promos[0]->display();
+          // $users->games[0]->display();
+          $this->arr['users'] = $users;
+          echo 'The user ' . $users->email , ' had a ' . $users->promos[0]->promo['content'] . ' reduction<br>';
+          foreach ($users->games[0]->game as $key => $game) {
+            echo 'The user n ' . $game['user_id'] , ' has played this game: ' . $game['content'] . '<br>';
+          }
+        }
+        
       //Test a garder=================================
       // $param = [
       //   'WHERE' => [

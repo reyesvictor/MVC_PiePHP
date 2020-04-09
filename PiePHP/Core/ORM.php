@@ -24,7 +24,7 @@ class ORM
 
   //This One Should Have The Possibility to get $relations = [ $articles, $comments  ]; ==> modify the sql request
   // SELECT * FROM comments JOIN user WHERE user.id = 2 ;
-  public static function read($table, $fields) // retourne un tableau associatif de l' enregistrement
+  public static function read($table, $fields = null) // retourne un tableau associatif de l' enregistrement
   {
     if (isset($fields['WHERE'])) {
       self::$fields = $fields['WHERE'];
@@ -36,8 +36,9 @@ class ORM
       self::fieldMaker();
     }
     $sql = "SELECT * FROM $table " . self::$where . ";";
-
+    var_dump($sql);
     $ret = Database::executeThis($sql, self::$arr);
+    self::unsetAll();
     return $ret;
   }
 
@@ -94,9 +95,11 @@ class ORM
     if (isset($params['JOIN'])) {
       $join = $params['JOIN'];
     }
-    $sql = "SELECT * FROM $table " . $join . self::$where . $ord .  $lim . " ;";
+    $sql = "SELECT " .  $table . ".* FROM $table " . $join . self::$where . $ord .  $lim . " ;";
+    var_dump($sql);
     $class = '\Model\\' . substr(ucfirst($table), 0, -1) . 'Model';
     $ret = Database::executeThis($sql, self::$arr);
+    self::unsetAll();
     var_dump($class);
     if (class_exists($class)) {
       $obj = new $class();
@@ -150,5 +153,15 @@ class ORM
       }
     }
     return $arr;
+  }
+
+  public function unsetAll()
+  {
+    $class = new \ReflectionClass('\Core\ORM');
+    $arr = $class->getStaticProperties();
+    foreach ($arr as $k => $var) {
+      self::${$k} = null;
+    }
+    unset($arr);
   }
 }

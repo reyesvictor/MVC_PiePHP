@@ -9,8 +9,8 @@ class CommentModel
   
   public function display() {
     echo '<hr>';
-    echo 'DISPLAY';
-    var_dump($this);
+    echo 'DISPLAY OF CommentModel';
+    var_dump($this);  
     echo '<hr>';
   }
 }
