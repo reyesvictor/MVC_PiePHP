@@ -230,11 +230,11 @@ class UserController extends \Core\Controller
   public function __destruct()
   {
     if (isset($this->file) && isset($this->arr)) {
-      $this->render($this->file, $this->arr);
+      echo $this->render($this->file, $this->arr);
       //quelle utilité de le passer comme ça ?
       // $this->render($this->file, ['info'=> $this->arr]);
     } else {
-      $this->render($this->file);
+      echo $this->render($this->file);
     }
   }
 }
