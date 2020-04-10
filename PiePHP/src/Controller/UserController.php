@@ -158,7 +158,7 @@ class UserController extends \Core\Controller
       $users = new \Model\UserModel(['id' => $id]);
       unset($users->relations);
       echo '<hr>'; 
-      var_dump($users);
+      // var_dump($users);
       if ( !isset($users->email) ) {
         echo 'This user doesnt exist<br>';
       }
