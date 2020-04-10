@@ -204,9 +204,6 @@ class UserController extends \Core\Controller
           // $users->games[0]->display();
           $this->arr['users'] = $users;
           echo 'The user ' . $users->email , ' had a ' . $users->promos[0]->promo['content'] . ' reduction<br>';
-          foreach ($users->games[0]->game as $key => $game) {
-            echo 'The user n ' . $game['user_id'] , ' has played this game: ' . $game['content'] . '<br>';
-          }
         }
         
       //Test a garder=================================
