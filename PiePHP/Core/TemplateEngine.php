@@ -9,8 +9,8 @@ class TemplateEngine extends Controller
     foreach ($scope as $key => $value) {
       $this->{$key} = $value;
     }
-    $content = file_get_contents($f);
-
+    // $content = file_get_contents($f);
+    $content = $f; 
     //testvide
     $vide = FALSE;
     $a = 45;
@@ -26,7 +26,7 @@ class TemplateEngine extends Controller
     ];
     
     $pregrep = [
-      'foreach' => [ //if its all in the same line
+      'foreach' => [
         ['/@foreach(.*)\)/', '/\@endforeach/'],
         ["foreach $1 ) {", '}']
       ],
