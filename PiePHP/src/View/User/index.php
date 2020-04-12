@@ -15,8 +15,8 @@
   } else {
 
   ?>
-    <button><a href="/PiePHP/register/">Register</a></button>
-    <button><a href="/PiePHP/login/">Login</a></button>
+    <button><a href='/PiePHP/register/'>Register</a></button>
+    <button><a href='/PiePHP/login/'>Login</a></button>
   <?php
   }
   ?>
