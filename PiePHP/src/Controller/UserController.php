@@ -191,7 +191,6 @@ class UserController extends \Core\Controller
         echo 'The user ' . $users->email, ' had a ' . $users->promo_id . ' reduction<br>';
       } else {
         echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
-
       }
 
       //Test a garder=================================
@@ -223,7 +222,3 @@ class UserController extends \Core\Controller
     }
   }
 }
-    
-
- 
-

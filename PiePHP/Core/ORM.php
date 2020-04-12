@@ -15,7 +15,7 @@ class ORM
   //Les 5 KAGES
   public static function create($table, $fields) //return last id
   {
-    if ( isset(\Core\Request::$post) ) {
+    if (isset(\Core\Request::$post)) {
       unset($fields['relations']);
       unset($fields['hasone']);
       unset($fields['hasmany']);
@@ -33,7 +33,7 @@ class ORM
 
   public static function read($table, $fields = null) // retourne un tableau associatif de l' enregistrement
   {
-    if ( isset(\Core\Request::$post['email']) ) {
+    if (isset(\Core\Request::$post['email'])) {
       $sql = "SELECT * FROM $table WHERE users.email = ? ;";
       self::$arr = \Core\Request::$post['email'];
     } else {
