@@ -105,7 +105,7 @@ class Entity
     if (isset($this->relations) && is_array($this->relations) && count($this->relations) > 0) {
       $this->verifyRelations();
     }
-    var_dump(self::$getvars);
+    // var_dump(self::$getvars);
     return \Core\ORM::read(self::$dbname, self::$getvars);
   }
 

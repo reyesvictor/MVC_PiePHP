@@ -49,33 +49,33 @@ class UserController extends \Core\Controller
     $this->add->login();
     echo '</br>';
     echo '</br>';
-    echo 'Possibility to modify user information: ';
-    echo '</br>';
+    // echo 'Possibility to modify user information: ';
+    // echo '</br>';
 
-    //UPDATE, modifie les données------------------------------
-    $this->add2 = new \Model\UserModel([
-      'email' => "{$_SESSION['email']}-modified",
-      'password' => 'modified',
-    ]);
-    print_r($this->add2->modelUpdate());
-    echo ' <==== 1 = Update OK, 0 = Update WRONG </br>';
-    echo '</br>';
-    echo 'Reading the user information: ';
-    echo '</br>';
-    // $this->logoutAction();
-    $this->add2->login();
-    echo '<pre>';
-    //READ, doit aller dans showAction en bas
-    print_r($this->add2->modelRead());
-    echo '</pre>';
-    echo '</br>';
-    //VERIFY 
-    $verif = $this->add2->modelFind();
-    if (isset($verif) && count($verif) == 0) {
-      echo 'This user does not exist';
-    } else {
-      echo 'This user exists';
-    }
+    // //UPDATE, modifie les données------------------------------
+    // $this->add2 = new \Model\UserModel([
+    //   'email' => "{$_SESSION['email']}-modified",
+    //   'password' => 'modified',
+    // ]);
+    // print_r($this->add2->modelUpdate());
+    // echo ' <==== 1 = Update OK, 0 = Update WRONG </br>';
+    // echo '</br>';
+    // echo 'Reading the user information: ';
+    // echo '</br>';
+    // // $this->logoutAction();
+    // $this->add2->login();
+    // echo '<pre>';
+    // //READ, doit aller dans showAction en bas
+    // print_r($this->add2->modelRead());
+    // echo '</pre>';
+    // echo '</br>';
+    // //VERIFY 
+    // $verif = $this->add2->modelFind();
+    // if (isset($verif) && count($verif) == 0) {
+    //   echo 'This user does not exist';
+    // } else {
+    //   echo 'This user exists';
+    // }
 
     // DELETE user-----------------------------------------
     // echo '</br>';
