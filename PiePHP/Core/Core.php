@@ -12,10 +12,10 @@ class Core
   {
     require_once './src/routes.php';
     if ($this->array = Router::get($this->url())) {
-      // echo 'STATIC [ OK ]' . PHP_EOL;
+      echo 'STATIC [ OK ]' . PHP_EOL;
       $this->static();
     } else {
-      // echo 'DYNAMIC [ OK ]' . PHP_EOL;
+      echo 'DYNAMIC [ OK ]' . PHP_EOL;
       $this->dynamic();
     }
   } 
@@ -40,7 +40,6 @@ class Core
     $this->getClass();
 
     //Si le controller ou l’action fournie n’existe pas, il faut afficher le message : « 404 »
-    // echo url(PATH_ORIGIN) . 'src/' . url($this->class) . ' <=====' .  PHP_EOL;
     echo 'Class verification: ' . $this->class . PHP_EOL;
     if (
       !file_exists( PATH_ORIGIN . '/src/' .  url($this->class) . '.php')

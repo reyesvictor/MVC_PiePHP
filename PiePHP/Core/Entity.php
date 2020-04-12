@@ -7,7 +7,6 @@ class Entity
   static $db;
   static $dbname;
   static $getvars;
-  // private static $relations;
 
   public function __construct($params = [])
   {
@@ -87,8 +86,6 @@ class Entity
   public function createParam($arr)
   {
     foreach ($arr as $key => $value) {
-      // if ( $key == 'relations' ) {
-      //   $this->relations = $value;
       if (preg_match('/ /', $key)) {
         $this->{preg_replace('/ /', '_',  $key)} = $value; //defining my protected variables
       } else {

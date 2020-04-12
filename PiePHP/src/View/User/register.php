@@ -16,9 +16,15 @@
     <h3>Register Here</h3>
     <form action="/PiePHP/register" method="post">
       <label for="fname">Email</label><br>
-      <input type="text" id="email" name="email" value="victor.reyes@"><br>
+      <input type="text" name="email" value="victor.reyes@"><br>
       <label for="lname">Password</label><br>
-      <input type="password" id="pwd" name="password" value="root"><br><br>
+      <input type="password" name="password" value="root"><br><br>
+      <select name="promo_id">Choose your favourite reduction
+        <option value="2">-25%</option>
+        <option value="1">-50%</option>
+        <option value="3">-75%</option>
+        <option value="4">-100%</option>
+      </select>
       <input type="submit" value="Submit">
     </form>
   <?php

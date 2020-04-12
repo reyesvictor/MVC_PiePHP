@@ -26,6 +26,7 @@ class UserController extends \Core\Controller
   public function registerAction()
   {
     $this->add = new \Model\UserModel(\Core\Request::$post);
+    // var_dump($this->add);
     if (count($this->add->modelRead()) > 0) {
       echo '<h3>Error, user with this mail already exists</h3>';
       $this->file = 'register';
@@ -96,7 +97,6 @@ class UserController extends \Core\Controller
     // $this->logoutAction();
     // echo '</br>';
 
-    //Charge HomePage
     $this->file = 'index';
   }
 
@@ -151,57 +151,47 @@ class UserController extends \Core\Controller
       $this->all_users = new \Model\UserModel();
       $this->pass = $this->all_users->modelRead_all();
       $this->arr['users'] = $this->pass[0];
-      //ne sert plus, cest pour laffichage dans le show
-      // $id = ['id' => $this->arr[0]['id'], 'col' => 'id'];
     } else if (isset($id)) {
-
       $users = new \Model\UserModel(['id' => $id]);
       unset($users->relations);
-      echo '<hr>';
       // var_dump($users);
       if (!isset($users->email)) {
         echo 'This user doesnt exist<br>';
-      } else if (!isset($users->promos[0]->promo['content'])) {
-        echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
-      } else {
+      } else if (isset($users->promos[0]->promo['content'])) {
         $users->comments[0]->display();
         $users->promos[0]->display();
-        // $users->games[0]->display();
         $this->arr['users'] = $users;
         echo 'The user ' . $users->email, ' had a ' . $users->promos[0]->promo['content'] . ' reduction<br>';
-        foreach ($users->games[0]->game as $key => $game) {
-          echo 'The user n ' . $game['user_id'], ' has played this game: ' . $game['content'] . '<br>';
-        }
+        echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
+      } else if (isset($users->promo_id)) {
+        $users->comments[0]->display();
+        $users->promos[0]->display();
+        $this->arr['users'] = $users;
+        echo 'The user ' . $users->email, ' had a ' . $users->promo_id . ' reduction<br>';
+      } else {
+        echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
       }
     } else if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
-      //TEST POUR LES RELATION MODEL: THEO STYLE, 1 => N ------------------
-
-      //ETAPE 1 : passer en parametre les relations dans UserModel
-      //ETAPE 2 : generer les variables dans UserModel dans le construct
-      // construct => foreach dans relations, read -> has one et read all -> many
-      // many to many ? 
-      // loops infinis à éviter?
-      //ETAPE 3 : executer chaque ligne de relations (hasmany, hasone, manytomany)
-      //ETAPE 4 : return un object si possible, verifier si la classe existe et generer un objet en fonction ????
-      // ????
-
-      //FIN : UN ARRAY DES COMMENTS, UN OBJET AVEC SES VARIABLES, UN ARRAY DOBJETS... 
-
-      //Fin de test---------------------------------------------------
       $users = new \Model\UserModel(['id' => $_SESSION['id']]);
       unset($users->relations);
-      echo '<hr>';
-      var_dump($users);
+      // var_dump($users);
+      // var_dump($users->promos[0]->promo);
       if (!isset($users->email)) {
         echo 'This user doesnt exist<br>';
-      } else if (!isset($users->promos[0]->promo['content'])) {
-        echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
-      } else {
+      } else if (isset($users->promos[0]->promo['content'])) {
         $users->comments[0]->display();
         $users->promos[0]->display();
-        // $users->games[0]->display();
         $this->arr['users'] = $users;
         echo 'The user ' . $users->email, ' had a ' . $users->promos[0]->promo['content'] . ' reduction<br>';
+        echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
+      } else if (isset($users->promo_id)) {
+        $users->comments[0]->display();
+        $users->promos[0]->display();
+        $this->arr['users'] = $users;
+        echo 'The user ' . $users->email, ' had a ' . $users->promo_id . ' reduction<br>';
+      } else {
+        echo 'The users ' . $users->email, ' didn\'t had a reduction<br>';
+
       }
 
       //Test a garder=================================
@@ -217,18 +207,17 @@ class UserController extends \Core\Controller
     }
     $this->file = 'show';
     $this->arr['welcome_text'] = 'Welcome to the user list page<br>';
-    $this->arr['middle_text'] = 'Here you can see all the users subcribed<br>';
+    $this->arr['middle_text'] = 'Here you can see user information<br>';
     $this->arr['end_text'] = 'You reached the botttom';
     $this->arr['credits'] = '@victor 2020';
     // var_dump($this->arr);
+    // echo '<hr>';
   }
 
   public function __destruct()
   {
     if (isset($this->file) && isset($this->arr)) {
       echo $this->render($this->file, $this->arr);
-      //quelle utilité de le passer comme ça ?
-      // $this->render($this->file, ['info'=> $this->arr]);
     } else {
       echo $this->render($this->file);
     }

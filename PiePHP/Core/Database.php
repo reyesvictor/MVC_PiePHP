@@ -9,10 +9,6 @@ class Database
   static $pwd = "";
   static $dbName = "piephp";
   static $stmt;
-  // private $host = "remotemysql.com";
-  // private $user = "lTsiPIi4Qh";
-  // private $pwd = "nUKWNJXLKN";
-  // private $dbName = "lTsiPIi4Qh";
 
   //CONNEXION TO THE DATABASE
   public static function connect()
@@ -27,9 +23,6 @@ class Database
   public static function executeThis($sql, $array_values = null)
   {
     self::$stmt = Entity::$db->prepare($sql);
-    // echo '<hr>'; 
-    // var_dump(self::$stmt);
-    // echo '<hr>';
     if (!$array_values) {
       self::$stmt->execute();
     } else if (is_string($array_values) || is_int($array_values)) {

@@ -9,9 +9,7 @@ class TemplateEngine extends Controller
     foreach ($scope as $key => $value) {
       $this->{$key} = $value;
     }
-    // $content = file_get_contents($f);
     $content = $f; 
-    //testvide
     $vide = FALSE;
     $a = 45;
     $b =8;

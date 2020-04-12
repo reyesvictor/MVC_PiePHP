@@ -2,7 +2,6 @@
 @isset( $this->users )
 <p>Ce isset fonctionne {$users->email} c'est cool</p>
 <p>Ce isset fonctionne {$a} c'est cool</p>
-@endisset
 @isset( $inconnu )
 <p>Ce isset ne fonctionne pas les mecs</p>
 @endisset
@@ -37,7 +36,12 @@ echo "a ne vaut ni 5 ni 6";
 @endif
 @endisset
 <br>
+@isset ( $users->comments[0]->comment['content'] )
 <p>The user {$users->email}, had a {$users->promos[0]->promo['content']} reduction<br>
+@endisset
+@isset ( $users->promo_id )
+<p>The user {$users->email}, had a reduction, id : {$users->promo_id}<br>
+@endisset
 <br>
 <br>
 {{ $middle_text }}
@@ -52,17 +56,21 @@ echo "!!!";
 echo "b ne vaut ni 5 ni 6";
 @endif
 <br>
+@isset ( $users->comments[0]->comment['content'] )
 @foreach ($users->comments[0]->comment as $comment)
 <p>This is user comments is as follows: {$comment['content']}</p>
 @endforeach
+@endisset
 <br>
 <br>
+@isset ( $users->games[0]->game['content'] )
 @foreach ($users->games[0]->game as $game)
 <p>The user {$game['user_id']} played: {$game['content']}</p>
 @endforeach
+@endisset
 <br>
+@endisset
 {{ $end_text }}
 <br>
-{{ $credits }}
 {{ $credits }}
 <br>

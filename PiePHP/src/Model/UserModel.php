@@ -5,9 +5,6 @@ namespace Model;
 
 class UserModel extends \Core\Entity
 {
-  // Vous devez donc représenter ce mécanisme dans vos models, et dans votre ORM
-  //$relations = [ $articles, $comments  ];
-
   public $relations = [
     'hasone' => [
       ['table' => 'promos', 'key' => 'promo_id'],
@@ -15,7 +12,6 @@ class UserModel extends \Core\Entity
     'hasmany' => [
       ['table' => 'comments', 'key' => 'user_id'],
     ],
-    // "|
     'manytomany' => [
       ['table' => 'games', 'key' => 'game_id'],
     ],
