@@ -24,8 +24,6 @@ class ORM
 
       self::fieldMaker();
       $sql = "INSERT INTO {$table} ( " . self::$t . " ) VALUES ( " . self::$v . " ) ;";
-      // var_dump($sql);
-      // var_dump(self::$arr);
       Database::executeThis($sql, self::$arr);
       return Entity::$db->lastInsertId();
     }
@@ -48,11 +46,8 @@ class ORM
       }
       $sql = "SELECT * FROM $table " . self::$where . ";";
     }
-    // var_dump($sql);
-    // var_dump(self::$arr);
     $ret = Database::executeThis($sql, self::$arr);
     self::unsetAll();
-    // var_dump($ret);
     return $ret;
   }
 
@@ -80,8 +75,8 @@ class ORM
     return Database::$stmt->rowCount();
   }
 
-  public static function find($table, $params)
-  { // retourne un tableau d'enregistrements
+  public static function find($table, $params) // retourne un tableau d'enregistrements
+  {
     $params = self::getSpacesAgain($params);
     $ord = '';
     $lim = '';
@@ -100,11 +95,9 @@ class ORM
       $join = $params['JOIN'];
     }
     $sql = "SELECT " .  $table . ".* FROM $table " . $join . self::$where . $ord .  $lim . " ;";
-    // var_dump($sql);
     $class = '\Model\\' . substr(ucfirst($table), 0, -1) . 'Model';
     $ret = Database::executeThis($sql, self::$arr);
     self::unsetAll();
-    // var_dump($class);
     if (class_exists($class)) {
       $obj = new $class();
       if (isset($ret[0])) {
