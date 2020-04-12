@@ -27,11 +27,14 @@ class Database
   public static function executeThis($sql, $array_values = null)
   {
     self::$stmt = Entity::$db->prepare($sql);
+    // echo '<hr>'; 
+    // var_dump(self::$stmt);
+    // echo '<hr>';
     if (!$array_values) {
       self::$stmt->execute();
     } else if (is_string($array_values) || is_int($array_values)) {
       self::$stmt->execute([$array_values]);
-    } else if ( is_array($array_values)) {
+    } else if (is_array($array_values)) {
       //TEST-------------------------------------------
       // for ($i = 1; $i <= count($array_values); $i++) {
       //   self::$stmt->bindParam($i, $array_values[$i - 1]);
