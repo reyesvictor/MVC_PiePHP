@@ -22,7 +22,7 @@ class Entity
         ]
       );
       if (count($newparams) === 0) {
-        echo 'This user doesnt exist';
+        // echo 'This user doesnt exist';
         return;
       } else {
         self::createParam($newparams);
